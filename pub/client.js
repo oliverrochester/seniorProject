@@ -2,7 +2,8 @@
 let vm = {
     data() { //properties of our object must be established here, and are returned as an object.
         return {
-            
+            viewType: "landingPage",
+            balance: null,
         }
     }, 
     methods: { //An object that contains whatever methods we need.
@@ -20,14 +21,14 @@ let vm = {
             }
             else{
                 var ciphertext = CryptoJS.AES.encrypt(password, 'secret key 123');
-                $.post("/createAccount", {username: username, password: ciphertext}, dataFromServer => {
+                console.log(ciphertext)
+                $.post("/createAccount", {username: username, password: password}, dataFromServer => {
                     if(!dataFromServer.createAccountSuccess){
                         status.innerHTML = "Account with that username already exists"
                     }
                     else{
-                        goToMainPage()
+                        status.innerHTML = "Account created successfully"
                     }
-                    console.log(dataFromServer.createAccountSuccess);
                 }); 
             }
             
@@ -37,13 +38,16 @@ let vm = {
             let username = String(document.getElementById("userLogin").value);
             let password = String(document.getElementById("passwordLogin").value);
             $.post("/login", {username: username, password: password}, dataFromServer => {
-                console.log(dataFromServer.loginSuccess)
+                if(dataFromServer.loginSuccess){
+                    this.goToMainPage(dataFromServer);
+                }
             });
           },
 
-          goToMainPage(){
-              let loginCreateActComponent = document.getElementById("loginOrCreateAccount");
-              loginCreateActComponent.style.visibility = "hidden"
+          goToMainPage(data){
+              this.viewType = "mainPage";
+              console.log(data)
+              this.balance = data.data.balance;
           }
     },
     computed: { //computed properties (methods that compute stuff based on "data" properties)

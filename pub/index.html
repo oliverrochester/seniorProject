@@ -16,7 +16,7 @@
             <div id="navUser">Welcome back orochest</div>
         </div>
 
-        <div id="loginOrCreateAccount">
+        <div id="loginOrCreateAccount" v-if="viewType=='landingPage'">
             <div id="loginDiv" class="openingPage">
 
                 <div class="credentialDivsElements"><h3>Login</h3></div>
@@ -42,9 +42,12 @@
                     <button v-on:click="createAccount()" id="credentialBtns">Create Account</button>
                 </div>
             </div>
-
             <div id="createAccountorLoginStatus"></div>
-            
+        </div>
+
+        <div id="mainPage" v-if="viewType=='mainPage'">
+            hello world
+            <h2>Available Balance:  ${{balance}}</h2>
         </div>
 
     </div>
