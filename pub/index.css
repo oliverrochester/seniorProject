@@ -1,0 +1,68 @@
+#loginOrCreateAccount{
+    width: 70%;
+    margin: auto;
+    padding: 5%;
+    
+}
+
+#navPageTitle{
+    text-align: center;
+}
+
+.openingPage{
+    display: inline-block;
+}
+
+#loginDiv{
+    margin-left: 10%;
+    width: 35%;
+    text-align: center;
+    background-color: aquamarine;
+    border-radius: 5px;
+}
+
+#createAccountDiv{
+    margin-left: 10%;
+    width: 35%;
+    text-align: center;
+    background-color: aquamarine;
+    border-radius: 5px;
+}
+
+.inputs{
+    height: 30px;
+    width: 250px;
+    text-align: center;
+    border: none;
+    font-size: large;
+}
+
+.credentialDivsElements{
+    margin: 20px;
+    font-size: large;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#credentialBtns{
+    width: 200px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    background-color: rgb(212, 212, 212);
+    font-size: large;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#credentialBtns:hover{
+    background-color: rgb(94, 92, 92);
+    color:rgb(247, 247, 247);
+    transition: 0.5s ease-in-out;
+}
+
+#createAccountorLoginStatus{
+    text-align: center;
+    margin: auto;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+    margin-top: 20px;
+}

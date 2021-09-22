@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css" />
+    <title>Document</title>
+</head>
+
+
+<body>
+    <div id="main">
+        <div id="navBar">
+            <div id="navPageTitle"><h2> Paper Trading Web Application </h2></div>
+            <div id="navUser">Welcome back orochest</div>
+        </div>
+
+        <div id="loginOrCreateAccount">
+            <div id="loginDiv" class="openingPage">
+
+                <div class="credentialDivsElements"><h3>Login</h3></div>
+                <div class="credentialDivsElements">Username</div>
+                <input id="userLogin" class="inputs"></input>
+                <div class="credentialDivsElements">Password</div>
+                <input id="passwordLogin" class="inputs" type="Password"></input>
+                <div class="credentialDivsElements">
+                    <button v-on:click="login()" id="credentialBtns">Login</button>
+                </div>  
+ 
+
+            </div>
+
+            <div id="createAccountDiv" class="openingPage">
+
+                <div class="credentialDivsElements"><h3>Create Account</h3></div>
+                <div class="credentialDivsElements">Username</div>
+                <input id="userCreateAct" class="inputs"></input>
+                <div class="credentialDivsElements">Password</div>
+                <input id="passwordCreateAct" class="inputs" type="Password"></input>
+                <div class="credentialDivsElements">
+                    <button v-on:click="createAccount()" id="credentialBtns">Create Account</button>
+                </div>
+            </div>
+
+            <div id="createAccountorLoginStatus"></div>
+            
+        </div>
+
+    </div>
+        
+</body>
+<script src="vue.global.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+<script src="jquery-3.5.1.js"></script>
+<script src="client.js"></script>
+</html>
