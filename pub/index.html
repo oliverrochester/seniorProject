@@ -13,9 +13,8 @@
     <div id="main">
         <div id="navBar">
             <div id="navPageTitle"><h2> Paper Trading Web Application </h2></div>
-            <div id="navUser">Welcome back orochest</div>
         </div>
-
+        <h2 v-if="viewType=='mainPage'">Available Trading Balance:  ${{balance}}</h2>
         <div id="loginOrCreateAccount" v-if="viewType=='landingPage'">
             <div id="loginDiv" class="openingPage">
 
@@ -45,16 +44,50 @@
             <div id="createAccountorLoginStatus"></div>
         </div>
 
-        <div id="mainPage" v-if="viewType=='mainPage'">
-            hello world
-            <h2>Available Balance:  ${{balance}}</h2>
-        </div>
+        <div id="mainPageContainer" v-if="viewType=='mainPage'">
+            <div id="mainPage" v-if="viewType=='mainPage'">
+                
+                <div id="buyAndSellStocksDiv" class="mainPageDivs">
+                    <div id="buyStockDiv">
+                        
+                        <h3>Buy Stock</h3>
+                        <h4>Select Stock Ticker</h4>
+                        <input id="tickerToPurchase"></input>
+                        <h4>How many shares?</h4>
+                        <input id="shareAmt"></input>
+                        <button class="buySellButtons" v-on:click="buyStock()">Buy Now</button>
+                        
+                    </div>
+                    <div id="sellStockDiv">
+                        <h3>Sell Stock</h3>
+                        <h4>Enter Stock Ticker</h4>
+                        <input></input>
+                        <h4>How many shares?</h4>
+                        <input></input>
+                        <button class="buySellButtons">Sell Now</button>
+                    </div>
+                </div>
 
+                <div id="stockDataDiv" class="mainPageDivs">
+                    <div id="searchDiv">
+                        <h3>Search ticker for stock data</h3>
+                        <h4>Enter Stock Ticker</h4>
+                        <input></input>
+                    </div>  
+                </div>
+
+                <div class="mainPageDivs">
+                    <h3>Positions</h3>
+                    
+                </div>
+
+            </div>
+        </div>
     </div>
         
 </body>
 <script src="vue.global.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+<script src="stocks.js"></script>
 <script src="jquery-3.5.1.js"></script>
 <script src="client.js"></script>
 </html>

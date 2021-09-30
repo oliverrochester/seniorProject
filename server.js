@@ -4,19 +4,33 @@ var bodyParser = require("body-parser");
 var app = express(); 
 app.use(bodyParser.urlencoded({extended: true})); 
 app.use(express.static("pub")); 
-var yahooFinance = require('yahoo-finance');
+//const twelvedata = require('twelvedata');
+const spawn = require('child_process').spawn;
+
 
 const userDatabase = new Datastore('userDatabase.db');
 userDatabase.loadDatabase();
 //userDatabase.insert({username: 'orochest', password: 'elmo'});
 //userDatabase.insert({username: 'jrochest', password: 'skipper'});
 
-yahooFinance.quote({
-    symbol: 'AAPL',
-    modules: [ 'price', 'summaryDetail' ] // see the docs for the full list
-  }, function (err, quotes) {
-    console.log(modules[0]);
-  });
+
+
+
+
+    app.post("/getStockPrice", function(req, res) {
+        let ticker = req.body.ticker;
+        let tickerPrice = null;
+        const process = spawn('py', ['./getTickerData.py', ticker])
+        process.stdout.on('data', (data)=>{
+            tickerPrice = data.toString();
+            console.log(tickerPrice)
+            res.setHeader("Content-Type", "application/json");
+            res.write(JSON.stringify({tickerPrice: tickerPrice}));
+            res.end();
+        })
+         
+    });
+
 
 app.post("/login", function(req, res) {
     let username = req.body.username;

@@ -66,3 +66,32 @@
     font-size: large;
     margin-top: 20px;
 }
+
+#buyAndSellStocksDiv{
+   text-align: center; 
+}
+
+#stockDataDiv{
+    text-align: center;
+    width: 600px
+}
+
+.mainPageDivs{
+    background-color: lightblue;
+    width: 350px;
+    border: 1px solid black;
+    display: table-cell;
+    margin: 5%;
+    height: 100%
+}
+
+#mainPageContainer{
+    width: 1250px;
+    height: 600px;
+    background-color: beige;
+}
+
+.buySellButtons{
+    display: block;
+    margin: auto
+}

@@ -4,6 +4,7 @@ let vm = {
         return {
             viewType: "landingPage",
             balance: null,
+            tickerList: null
         }
     }, 
     methods: { //An object that contains whatever methods we need.
@@ -48,7 +49,42 @@ let vm = {
               this.viewType = "mainPage";
               console.log(data)
               this.balance = data.data.balance;
-          }
+              this.tickerList = data.data.tickerList;
+          },
+
+          buyStock(){
+                let ticker = document.getElementById("tickerToPurchase").value;
+                let shareAmt = document.getElementById("shareAmt").value;
+                shareAmt = parseInt(shareAmt);
+                let tickerPrice = null
+
+                $.post("/getStockPrice", {ticker: ticker,}, dataFromServer => {
+                    tickerPrice = parseFloat(dataFromServer.tickerPrice);  
+                }); 
+
+                if(ticker = ""){
+                    console.log("invalid ticker")
+                }
+                else if(shareAmt % 1 != 0){
+                    console.log("Please enter whole number for share amount")
+                }
+                else if((tickerPrice * shareAmt) > this.balance){
+                    console.log("do not have enough money to fill this order")
+                }
+                else{
+                    console.log("buying stock");
+                    let cost = tickerPrice * parseFloat(shareAmt);
+                    console.log(cost)
+                    this.balance = this.balance - cost;
+                    let arr = [];
+                    arr.push(ticker);
+                    arr.push(shareAmt);
+                    arr.push(tickerPrice);
+                    arr.push(cost);
+                    console.log(this.tickerList);
+                }
+                
+            }
     },
     computed: { //computed properties (methods that compute stuff based on "data" properties)
         //Do not change the value of a property from within these functions.  Side-effects

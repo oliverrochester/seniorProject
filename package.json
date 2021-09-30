@@ -11,12 +11,14 @@
   "license": "ISC",
   "dependencies": {
     "bufferutil": "^4.0.3",
+    "child_process": "^1.0.2",
     "crypto-js": "^4.1.1",
     "express": "^4.17.1",
     "nedb": "^1.8.0",
     "passport": "^0.4.1",
     "socket.io": "^4.0.0",
-    "utf-8-validate": "^5.0.4",
-    "yahoo-finance": "^0.3.7"
+    "stocks.js": "0.0.19",
+    "twelvedata": "^2.0.0",
+    "utf-8-validate": "^5.0.4"
   }
 }
