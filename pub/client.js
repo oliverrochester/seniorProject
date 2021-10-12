@@ -2,9 +2,11 @@
 let vm = {
     data() { //properties of our object must be established here, and are returned as an object.
         return {
+            username: null,
             viewType: "landingPage",
             balance: null,
-            tickerList: null
+            tickerList: [],
+            searchedStockData: []
         }
     }, 
     methods: { //An object that contains whatever methods we need.
@@ -50,41 +52,41 @@ let vm = {
               console.log(data)
               this.balance = data.data.balance;
               this.tickerList = data.data.tickerList;
+              this.user = data.data.username;
           },
 
           buyStock(){
-                let ticker = document.getElementById("tickerToPurchase").value;
+                let stockticker = document.getElementById("tickerToPurchase").value;
+                console.log(stockticker)
                 let shareAmt = document.getElementById("shareAmt").value;
-                shareAmt = parseInt(shareAmt);
-                let tickerPrice = null
-
-                $.post("/getStockPrice", {ticker: ticker,}, dataFromServer => {
-                    tickerPrice = parseFloat(dataFromServer.tickerPrice);  
-                }); 
-
-                if(ticker = ""){
+                shareAmt = parseFloat(shareAmt);
+                let tickerPrice = null;
+                if(ticker = "" || shareAmt % 1 !== 0){
                     console.log("invalid ticker")
                 }
-                else if(shareAmt % 1 != 0){
-                    console.log("Please enter whole number for share amount")
-                }
-                else if((tickerPrice * shareAmt) > this.balance){
-                    console.log("do not have enough money to fill this order")
-                }
                 else{
-                    console.log("buying stock");
-                    let cost = tickerPrice * parseFloat(shareAmt);
-                    console.log(cost)
-                    this.balance = this.balance - cost;
-                    let arr = [];
-                    arr.push(ticker);
-                    arr.push(shareAmt);
-                    arr.push(tickerPrice);
-                    arr.push(cost);
-                    console.log(this.tickerList);
+                    $.post("/getStockPrice", {ticker: stockticker,}, dataFromServer => {
+                        tickerPrice = dataFromServer.tickerPrice;  
+                        console.log(tickerPrice)
+                    });
+
+                    if((tickerPrice * parseFloat(shareAmt)) > this.balance){
+                        console.log("do not have enough money to fill this order")
+                    }
+                    else{
+                        $.post("/updateUserDataAfterBuy", {username: this.username, tickerSymbol: stockticker, stockPrice: tickerPrice, shares: shareAmt}, dataFromServer => {
+                            
+                        });
+                    }
                 }
-                
-            }
+          },
+
+          getTickerData(){
+            let stockticker = document.getElementById("tickerData").value;
+            $.post("/getTickerData", {ticker: stockticker,}, dataFromServer => {
+                console.log(dataFromServer.tickerPrice)
+            });
+          }
     },
     computed: { //computed properties (methods that compute stuff based on "data" properties)
         //Do not change the value of a property from within these functions.  Side-effects

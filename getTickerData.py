@@ -3,7 +3,6 @@ import sys
 
 arguments = str(sys.argv)
 arguments = str(arguments)
-
 arguments = arguments[::-1]
 apostropheCnt = 0
 ticker = ""

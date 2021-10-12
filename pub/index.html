@@ -12,12 +12,11 @@
 <body>
     <div id="main">
         <div id="navBar">
-            <div id="navPageTitle"><h2> Paper Trading Web Application </h2></div>
+            <div id="navPageTitle"><h1> Paper Trading Web Application </h1></div>
         </div>
-        <h2 v-if="viewType=='mainPage'">Available Trading Balance:  ${{balance}}</h2>
+
         <div id="loginOrCreateAccount" v-if="viewType=='landingPage'">
             <div id="loginDiv" class="openingPage">
-
                 <div class="credentialDivsElements"><h3>Login</h3></div>
                 <div class="credentialDivsElements">Username</div>
                 <input id="userLogin" class="inputs"></input>
@@ -26,12 +25,9 @@
                 <div class="credentialDivsElements">
                     <button v-on:click="login()" id="credentialBtns">Login</button>
                 </div>  
- 
-
             </div>
 
             <div id="createAccountDiv" class="openingPage">
-
                 <div class="credentialDivsElements"><h3>Create Account</h3></div>
                 <div class="credentialDivsElements">Username</div>
                 <input id="userCreateAct" class="inputs"></input>
@@ -41,9 +37,15 @@
                     <button v-on:click="createAccount()" id="credentialBtns">Create Account</button>
                 </div>
             </div>
-            <div id="createAccountorLoginStatus"></div>
+            <!--<div id="createAccountorLoginStatus"></div>-->
         </div>
 
+        <div id="landingPageLogoDiv" v-if="viewType=='landingPage'">
+            <img id="logo" src="stockChart.jpg" alt="graph">
+            &nbsp;
+        </div>
+
+        <div id="balanceDiv" v-if="viewType=='mainPage'">{{balance}}$ Equity</div>
         <div id="mainPageContainer" v-if="viewType=='mainPage'">
             <div id="mainPage" v-if="viewType=='mainPage'">
                 
@@ -52,18 +54,18 @@
                         
                         <h3>Buy Stock</h3>
                         <h4>Select Stock Ticker</h4>
-                        <input id="tickerToPurchase"></input>
+                        <input id="tickerToPurchase" class="buySellInputs"></input>
                         <h4>How many shares?</h4>
-                        <input id="shareAmt"></input>
+                        <input id="shareAmt" class="buySellInputs"></input>
                         <button class="buySellButtons" v-on:click="buyStock()">Buy Now</button>
                         
                     </div>
                     <div id="sellStockDiv">
                         <h3>Sell Stock</h3>
                         <h4>Enter Stock Ticker</h4>
-                        <input></input>
+                        <input class="buySellInputs"></input>
                         <h4>How many shares?</h4>
-                        <input></input>
+                        <input class="buySellInputs"></input>
                         <button class="buySellButtons">Sell Now</button>
                     </div>
                 </div>
@@ -72,13 +74,19 @@
                     <div id="searchDiv">
                         <h3>Search ticker for stock data</h3>
                         <h4>Enter Stock Ticker</h4>
-                        <input></input>
+                        <input id="tickerData"></input>
+                        <button>Search </button>
                     </div>  
+
+                    <div>
+                    </div>
                 </div>
 
                 <div class="mainPageDivs">
                     <h3>Positions</h3>
-                    
+                    <div v-for="tickers in tickerList">
+                        <p>{{ticker}}</p>
+                    </div>
                 </div>
 
             </div>
