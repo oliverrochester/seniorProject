@@ -103,7 +103,8 @@
 
 #stockDataDiv{
     text-align: center;
-    width: 600px
+    width: 600px;
+    background-color: rgb(14, 13, 13);
 }
 
 .mainPageDivs{
@@ -136,4 +137,9 @@
     border: none;
     height: 30px;
     margin-top: -15px;
+}
+
+.dataPoints{
+    display: inline-block;
+    margin: 20px;
 }

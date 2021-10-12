@@ -75,11 +75,43 @@
                         <h3>Search ticker for stock data</h3>
                         <h4>Enter Stock Ticker</h4>
                         <input id="tickerData"></input>
-                        <button>Search </button>
+                        <button v-on:click="getTickerData()" id="searchButton">Search </button>
                     </div>  
-
-                    <div>
+                    <div id="searchStatus">
                     </div>
+                    <div class="dataPoints">
+                        <div>Current Stock Price:</div>
+                        <div id="currentPriceDiv"></div>
+                    </div>
+                    <div class="dataPoints">
+                        <div>Todays Open Price: </div>
+                        <div id="todayOpenPriceDiv"></div>
+                    </div>
+                    <div class="dataPoints">
+                        <div>Yesterday's Close Price: </div>
+                        <div id="yesterdayClosePriceDiv"></div>
+                    </div>
+                    <div class="dataPoints">
+                        <div>Fifty Day Moving Average: </div>
+                        <div id="fiftyDayAvgDiv"></div>
+                    </div>
+                    <div class="dataPoints">
+                        <div>Day High: </div>
+                        <div id="dayHigh"></div>
+                    </div>
+                    <div class="dataPoints">
+                        <div>Day Low: </div>
+                        <div id="dayLow"></div>
+                    </div>
+                    <div class="dataPoints">
+                        <div>52 Week Low: </div>
+                        <div id="fiftyTwoLow"></div>
+                    </div>
+                    <div class="dataPoints">
+                        <div>52 Week High: </div>
+                        <div id="fiftyTwoHigh"></div>
+                    </div>
+                    
                 </div>
 
                 <div class="mainPageDivs">

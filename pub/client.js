@@ -82,9 +82,60 @@ let vm = {
           },
 
           getTickerData(){
+            let searchBtn = document.getElementById("searchButton");
+            searchBtn.disabled = true;
+            let searchStatus = document.getElementById("searchStatus");
+            searchStatus.innerHTML = "Searching...";
             let stockticker = document.getElementById("tickerData").value;
+            let currentPrice = document.getElementById("currentPriceDiv");
+            currentPrice.innerHTML = "";
+            let todayOpenPrice = document.getElementById("todayOpenPriceDiv");
+            todayOpenPrice.innerHTML = "";
+            let yesterdayClosePrice = document.getElementById("yesterdayClosePriceDiv");
+            yesterdayClosePrice.innerHTML = "";
+            let fiftyDayAvg = document.getElementById("fiftyDayAvgDiv");
+            fiftyDayAvg.innerHTML = "";
+            let dayHigh = document.getElementById("dayHigh");
+            dayHigh.innerHTML = "";
+            let dayLow = document.getElementById("dayLow");
+            dayLow.innerHTML = "";
+            let fifty2Low = document.getElementById("fiftyTwoLow");
+            fifty2Low.innerHTML = "";
+            let fifty2High = document.getElementById("fiftyTwoHigh");
+            fifty2High.innerHTML = "";
+
+            let dataArr = []
+            let dataArrNew = []
             $.post("/getTickerData", {ticker: stockticker,}, dataFromServer => {
-                console.log(dataFromServer.tickerPrice)
+                dataArr = dataFromServer.tickerPrice.split(", ");
+                dataArr.forEach((str) =>{
+                    let tempStr = "";
+                    for(let i = 0; i < str.length; i++){
+                        if(str.charAt(i) >= '0' && str.charAt(i) <= '9' || str.charAt(i) == '.'){
+                            tempStr += str.charAt(i);
+                        }
+                    }
+                    dataArrNew.push(tempStr)
+                })
+
+                var newtext = document.createTextNode(dataArrNew[0])
+                currentPrice.appendChild(newtext);
+                var newtext1 = document.createTextNode(dataArrNew[1])
+                todayOpenPrice.appendChild(newtext1);
+                var newtext2 = document.createTextNode(dataArrNew[2])
+                yesterdayClosePrice.appendChild(newtext2);
+                var newtext3 = document.createTextNode(dataArrNew[3])
+                fiftyDayAvg.appendChild(newtext3);
+                var newtext4 = document.createTextNode(dataArrNew[4])
+                dayHigh.appendChild(newtext4);
+                var newtext5 = document.createTextNode(dataArrNew[5])
+                dayLow.appendChild(newtext5);
+                var newtext6 = document.createTextNode(dataArrNew[6])
+                fifty2Low.appendChild(newtext6);
+                var newtext7 = document.createTextNode(dataArrNew[7])
+                fifty2High.appendChild(newtext7);
+                searchStatus.innerHTML = "";
+                searchBtn.disabled = false;
             });
           }
     },
