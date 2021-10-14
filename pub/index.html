@@ -45,10 +45,10 @@
             &nbsp;
         </div>
 
-        <div id="balanceDiv" v-if="viewType=='mainPage'">{{balance}}$ Equity</div>
+        <div id="balanceDiv" v-if="viewType=='mainPage'">{{userBalance}}$ Equity</div>
         <div id="mainPageContainer" v-if="viewType=='mainPage'">
             <div id="mainPage" v-if="viewType=='mainPage'">
-                
+
                 <div id="buyAndSellStocksDiv" class="mainPageDivs">
                     <div id="buyStockDiv">
                         
@@ -81,44 +81,57 @@
                     </div>
                     <div class="dataPoints">
                         <div>Current Stock Price:</div>
-                        <div id="currentPriceDiv"></div>
+                        <div class="subData" id="currentPriceDiv"></div>
                     </div>
                     <div class="dataPoints">
                         <div>Todays Open Price: </div>
-                        <div id="todayOpenPriceDiv"></div>
+                        <div class="subData" id="todayOpenPriceDiv"></div>
                     </div>
                     <div class="dataPoints">
                         <div>Yesterday's Close Price: </div>
-                        <div id="yesterdayClosePriceDiv"></div>
+                        <div class="subData" id="yesterdayClosePriceDiv"></div>
                     </div>
                     <div class="dataPoints">
                         <div>Fifty Day Moving Average: </div>
-                        <div id="fiftyDayAvgDiv"></div>
+                        <div class="subData" id="fiftyDayAvgDiv"></div>
                     </div>
                     <div class="dataPoints">
                         <div>Day High: </div>
-                        <div id="dayHigh"></div>
+                        <div class="subData" id="dayHigh"></div>
                     </div>
                     <div class="dataPoints">
                         <div>Day Low: </div>
-                        <div id="dayLow"></div>
+                        <div class="subData" id="dayLow"></div>
                     </div>
                     <div class="dataPoints">
                         <div>52 Week Low: </div>
-                        <div id="fiftyTwoLow"></div>
+                        <div class="subData" id="fiftyTwoLow"></div>
                     </div>
                     <div class="dataPoints">
                         <div>52 Week High: </div>
-                        <div id="fiftyTwoHigh"></div>
+                        <div class="subData" id="fiftyTwoHigh"></div>
                     </div>
                     
                 </div>
 
-                <div class="mainPageDivs">
+                <div id="positionsDiv" class="mainPageDivs">
                     <h3>Positions</h3>
-                    <div v-for="tickers in tickerList">
-                        <p>{{ticker}}</p>
+                    <button v-on:click="updatePositions()">Refresh</button>
+                    <div>
+                        <p id="ps">Symbol&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p>
+                        <p id="ps">Shares &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  </p>
+                        <p id="ps">Gains/Losses</p>
                     </div>
+                    
+                    <div class="positionsData" v-for="ticker in positions" v-on:click="doalert()" >
+                        <ul>
+                            <p id="ps">{{ticker.ticker}} &nbsp;  &nbsp;  &nbsp; &nbsp; &nbsp;</li>    
+                            <p id="ps">{{ticker.shareAmt}} &nbsp;  &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;</p>
+                            <p id="ps">00.00 &nbsp; &nbsp; &nbsp;</p>
+                        </ul>
+                        
+                    </div>
+                    
                 </div>
 
             </div>

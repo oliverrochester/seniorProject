@@ -4,9 +4,10 @@ let vm = {
         return {
             username: null,
             viewType: "landingPage",
-            balance: null,
-            tickerList: [],
-            searchedStockData: []
+            user: {},
+            positions: [],
+            userBalance: 0.00,
+            tickerCnt: 0,
         }
     }, 
     methods: { //An object that contains whatever methods we need.
@@ -50,14 +51,14 @@ let vm = {
           goToMainPage(data){
               this.viewType = "mainPage";
               console.log(data)
-              this.balance = data.data.balance;
-              this.tickerList = data.data.tickerList;
-              this.user = data.data.username;
+              this.user = data.data;
+              this.positions = data.data.tickerList;
+              this.userBalance = data.data.balance;
+              console.log(this.user);
           },
 
           buyStock(){
                 let stockticker = document.getElementById("tickerToPurchase").value;
-                console.log(stockticker)
                 let shareAmt = document.getElementById("shareAmt").value;
                 shareAmt = parseFloat(shareAmt);
                 let tickerPrice = null;
@@ -67,18 +68,57 @@ let vm = {
                 else{
                     $.post("/getStockPrice", {ticker: stockticker,}, dataFromServer => {
                         tickerPrice = dataFromServer.tickerPrice;  
-                        console.log(tickerPrice)
+
+                        if((tickerPrice * parseFloat(shareAmt)).toFixed(2) > this.balance){
+                            console.log("do not have enough money to fill this order")
+                        }
+                        else{
+                            this.user.balance = this.user.balance - (parseFloat(tickerPrice) * parseFloat(shareAmt)).toFixed(2);
+                            tempArr = {
+                                ticker: "",
+                                shareAmt: 0,
+                                tickerPrice: 0.0,
+                                costOfPurchase: 0.0,
+                                profits: 0.0,
+                            };
+                            tempArr.ticker = String(stockticker);
+                            tempArr.shareAmt = shareAmt;
+                            tempArr.tickerPrice = tickerPrice;
+                            tempArr.costOfPurchase = (parseFloat(tickerPrice) * parseFloat(shareAmt)).toFixed(2);
+                            this.user.tickerList.push(tempArr);
+                            this.userBalance = parseFloat(this.userBalance) - (parseFloat(tickerPrice) * parseFloat(shareAmt)).toFixed(2);
+                            $.post("/updateUserDataAfterBuy", {user: this.user}, dataFromServer => {
+                                console.log(dataFromServer);
+                                this.user = dataFromServer.tickerList;
+                                this.updatePositions(dataFromServer);
+                            });
+                        }
                     });
 
-                    if((tickerPrice * parseFloat(shareAmt)) > this.balance){
-                        console.log("do not have enough money to fill this order")
-                    }
-                    else{
-                        $.post("/updateUserDataAfterBuy", {username: this.username, tickerSymbol: stockticker, stockPrice: tickerPrice, shares: shareAmt}, dataFromServer => {
-                            
-                        });
-                    }
                 }
+          },
+
+          doalert(){
+            alert("div clicked")
+          },
+
+          updatePositions(user){
+            user.tickerList.forEach((pos) =>{
+                let sharesBought = pos.shareAmt;
+                let initialPurchaseCost = pos.costOfPurchase;
+
+                $.post("/getStockPrice", {ticker: tickerName,}, dataFromServer => {
+                    tickerPrice = dataFromServer.tickerPrice;
+                    let updatedCost = parseFloat(purchaseStockPrice)* parseFloat(sharesBought);
+                    pos.profits = parseFloat(updatedCost) - parseFloat(initialPurchaseCost);
+                });
+
+            })
+
+            $.post("/refreshPositions", {tickerList: user.tickerList, username: this.username}, dataFromServer => {
+                this.positions = dataFromServer.data.tickerList;
+            });
+
           },
 
           getTickerData(){

@@ -98,13 +98,27 @@
 #buyAndSellStocksDiv{
    text-align: center; 
    font-family: Courier;
-   background-color: rgb(24, 23, 23);
+   /*background-color: rgb(24, 23, 23);*/
+   background-image: linear-gradient(to right, rgb(70, 70, 70), rgb(46, 45, 45));
 }
 
 #stockDataDiv{
     text-align: center;
     width: 600px;
-    background-color: rgb(14, 13, 13);
+    /*background-color: rgb(14, 13, 13);*/
+    background-image: linear-gradient(to right, rgb(46, 45, 45), rgb(27, 27, 27));
+}
+
+#positionsDiv{
+    background-image: linear-gradient(to right, rgb(27, 27, 27), rgb(10, 10, 10));
+    text-align: left;
+    
+}
+
+.positionsData{
+    margin: -20px;
+    text-align: left;
+    
 }
 
 .mainPageDivs{
@@ -131,6 +145,12 @@
     border: none;
 }
 
+.buySellButtons:hover{
+    background-color: white;
+    color: black;
+    transition: 0.5s ease-in-out;
+}
+
 .buySellInputs{
     background-color: black;
     color:white;
@@ -142,4 +162,18 @@
 .dataPoints{
     display: inline-block;
     margin: 20px;
+    font-family: Courier;
+}
+
+.subData{
+    margin-top: 10px;
+}
+
+#positionsList{
+    
+}
+
+#ps{
+    display: inline-block;
+    text-align: center;
 }
