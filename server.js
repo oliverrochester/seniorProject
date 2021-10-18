@@ -12,22 +12,24 @@ userDatabase.insert({username: "orochest", password: "Skipper99?", tickerList: [
 
 //tickerList in database has array form of [stockTicker, how many shares bought, price of stock when bought, total cost of purchase]
 
-
+//Server get ticker Data function, receives ticker symbol from client
+//spawns a new process and calls a python script to retrieve data about the stock
+//returns array of data in a string format, which requires string manipulation to get the data in correct format
+// in order to use it later
 app.post("/getTickerData", function(req, res) {
     let ticker = req.body.ticker;
-    let tickerPrice = null;
+    let tickerData = null;
     const process = spawn('py', ['./getTickerData2.py', ticker])
     process.stdout.on('data', (data)=>{
-        tickerPrice = data.toString();
+        tickerData = data.toString();
         res.setHeader("Content-Type", "application/json");
-        res.write(JSON.stringify({tickerPrice: tickerPrice}));
+        res.write(JSON.stringify({tickerPrice: tickerData}));
         res.end();
     })
 });
 
 app.post("/getStockPrice", function(req, res) {
     let ticker = req.body.ticker;
-    console.log(ticker)
     let tickerPrice = null;
     const process = spawn('py', ['./getTickerData.py', ticker])
     process.stdout.on('data', (data)=>{
@@ -48,12 +50,13 @@ app.post("/updateUserDataAfterBuy", function(req, res) {
 
     userDatabase.find({username: userObj.username}, (err, user) =>{
         returnObj = user; 
+        console.log(returnObj)
+        res.setHeader("Content-Type", "application/json");
+        res.write(JSON.stringify({data: returnObj}));
+        res.end();
     });
 
-    // console.log(returnObj)
-    res.setHeader("Content-Type", "application/json");
-    res.write(JSON.stringify({data: returnObj}));
-    res.end();
+    
 });
 
 
@@ -70,7 +73,10 @@ app.post("/refreshPositions", function(req, res) {
     res.end();
 });
 
-
+//Server login function, gathers username and password from req object
+//Searches database to see if that username with the given password exists
+//If true, it returns true and the entire user object back to the client
+//If false, returns false
 app.post("/login", function(req, res) {
     let username = req.body.username;
     let password = req.body.password;
@@ -78,8 +84,6 @@ app.post("/login", function(req, res) {
     userDatabase.findOne({username: username, password: password}, (err, user) =>{
         if(user != null){
             console.log("login success")
-            console.log(user)
-            console.log(user.balance)
             res.setHeader("Content-Type", "application/json");
             res.write(JSON.stringify({loginSuccess: true, data: user}));
             res.end();
@@ -93,6 +97,11 @@ app.post("/login", function(req, res) {
     });
 });
 
+
+//Server create account function, gathers username and password from req object
+//Searches database to see if that username with the given password exists
+//If true, then a user already has an accont with that username and returns false
+//If false, then it creates a new user object with given information and adds it to the database and returns success
 app.post("/createAccount", function(req, res) {
     let username = req.body.username;
     let password = req.body.password; 

@@ -73,19 +73,19 @@ let vm = {
                             console.log("do not have enough money to fill this order")
                         }
                         else{
-                            this.user.balance = this.user.balance - (parseFloat(tickerPrice) * parseFloat(shareAmt)).toFixed(2);
-                            tempArr = {
+                            this.userBalance = this.userBalance - (parseFloat(tickerPrice) * parseFloat(shareAmt)).toFixed(2);
+                            tempObj = {
                                 ticker: "",
                                 shareAmt: 0,
                                 tickerPrice: 0.0,
                                 costOfPurchase: 0.0,
                                 profits: 0.0,
                             };
-                            tempArr.ticker = String(stockticker);
-                            tempArr.shareAmt = shareAmt;
-                            tempArr.tickerPrice = tickerPrice;
-                            tempArr.costOfPurchase = (parseFloat(tickerPrice) * parseFloat(shareAmt)).toFixed(2);
-                            this.user.tickerList.push(tempArr);
+                            tempObj.ticker = String(stockticker);
+                            tempObj.shareAmt = shareAmt;
+                            tempObj.tickerPrice = parseFloat(tickerPrice).toFixed(2);
+                            tempObj.costOfPurchase = (parseFloat(tickerPrice) * parseFloat(shareAmt)).toFixed(2);
+                            this.user.tickerList.push(tempObj);
                             this.userBalance = parseFloat(this.userBalance) - (parseFloat(tickerPrice) * parseFloat(shareAmt)).toFixed(2);
                             $.post("/updateUserDataAfterBuy", {user: this.user}, dataFromServer => {
                                 console.log(dataFromServer);
@@ -102,22 +102,24 @@ let vm = {
             alert("div clicked")
           },
 
-          updatePositions(user){
-            user.tickerList.forEach((pos) =>{
-                let sharesBought = pos.shareAmt;
-                let initialPurchaseCost = pos.costOfPurchase;
+          updatePositions(userObj){
+            console.log("console logging user at update positions")
+              console.log(userObj)
+            // userObj.tickerList.forEach((pos) =>{
+            //     let sharesBought = pos.shareAmt;
+            //     let initialPurchaseCost = pos.costOfPurchase;
 
-                $.post("/getStockPrice", {ticker: tickerName,}, dataFromServer => {
-                    tickerPrice = dataFromServer.tickerPrice;
-                    let updatedCost = parseFloat(purchaseStockPrice)* parseFloat(sharesBought);
-                    pos.profits = parseFloat(updatedCost) - parseFloat(initialPurchaseCost);
-                });
+            //     $.post("/getStockPrice", {ticker: tickerName,}, dataFromServer => {
+            //         tickerPrice = dataFromServer.tickerPrice;
+            //         let updatedCost = parseFloat(purchaseStockPrice)* parseFloat(sharesBought);
+            //         pos.profits = parseFloat(updatedCost) - parseFloat(initialPurchaseCost);
+            //     });
 
-            })
+            // });
 
-            $.post("/refreshPositions", {tickerList: user.tickerList, username: this.username}, dataFromServer => {
-                this.positions = dataFromServer.data.tickerList;
-            });
+            // $.post("/refreshPositions", {tickerList: user.tickerList, username: this.username}, dataFromServer => {
+            //     this.positions = dataFromServer.data.tickerList;
+            // });
 
           },
 
