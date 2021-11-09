@@ -54,7 +54,6 @@ let vm = {
               this.user = data.data;
               this.positions = data.data.tickerList;
               this.userBalance = data.data.balance;
-              console.log(this.user);
           },
 
           buyStock(){
@@ -73,24 +72,25 @@ let vm = {
                             console.log("do not have enough money to fill this order")
                         }
                         else{
-                            this.userBalance = this.userBalance - (parseFloat(tickerPrice) * parseFloat(shareAmt)).toFixed(2);
+                            this.userBalance = (this.userBalance - (parseFloat(tickerPrice) * parseFloat(shareAmt))).toFixed(2);
                             tempObj = {
                                 ticker: "",
                                 shareAmt: 0,
                                 tickerPrice: 0.0,
                                 costOfPurchase: 0.0,
-                                profits: 0.0,
                             };
                             tempObj.ticker = String(stockticker);
                             tempObj.shareAmt = shareAmt;
                             tempObj.tickerPrice = parseFloat(tickerPrice).toFixed(2);
                             tempObj.costOfPurchase = (parseFloat(tickerPrice) * parseFloat(shareAmt)).toFixed(2);
-                            this.user.tickerList.push(tempObj);
-                            this.userBalance = parseFloat(this.userBalance) - (parseFloat(tickerPrice) * parseFloat(shareAmt)).toFixed(2);
-                            $.post("/updateUserDataAfterBuy", {user: this.user}, dataFromServer => {
-                                console.log(dataFromServer);
-                                this.user = dataFromServer.tickerList;
-                                this.updatePositions(dataFromServer);
+                            console.log(tempObj)
+                            
+                            newUserBalance = parseFloat(this.userBalance) - (parseFloat(tickerPrice) * parseFloat(shareAmt)).toFixed(2);
+                            $.post("/updateUserDataAfterBuy", {userBalance: newUserBalance, newObj: tempObj, user: this.username}, dataFromServer => {
+                                console.log("data from server")
+                                console.log(dataFromServer.data);
+                                this.user = dataFromServer[0];
+                                this.updatePositions(this.user);
                             });
                         }
                     });
@@ -104,7 +104,7 @@ let vm = {
 
           updatePositions(userObj){
             console.log("console logging user at update positions")
-              console.log(userObj)
+            //   console.log(userObj)
             // userObj.tickerList.forEach((pos) =>{
             //     let sharesBought = pos.shareAmt;
             //     let initialPurchaseCost = pos.costOfPurchase;

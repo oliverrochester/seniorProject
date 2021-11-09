@@ -17,7 +17,6 @@
     "nedb": "^1.8.0",
     "passport": "^0.4.1",
     "socket.io": "^4.0.0",
-    "stocks.js": "0.0.19",
     "twelvedata": "^2.0.0",
     "utf-8-validate": "^5.0.4"
   }

@@ -42,13 +42,29 @@ app.post("/getStockPrice", function(req, res) {
 });
 
 app.post("/updateUserDataAfterBuy", function(req, res) {
-    let userObj = req.body.user;
+    let tickerListObj = req.body.newObj;
+    let balance = req.body.userBalance;
+    let username = req.body.username;
+    let newTickerList = []
+    let newBalance = 0;
     
-    // newTickerList.push(buyArr);
-    let returnObj = {};
-    userDatabase.update({username: userObj.username},{$set: {tickerList: userObj.tickerList, balance: userObj.balance}})
+    userDatabase.findOne({username: username}, (err, user) =>{
+        console.log(user)
+        console.log("ticker list before push")
+        console.log(user.tickerList)
+        newTickerList = user.tickerList;
+        newBalance = (parseFloat(user.balance) + parseFloat(balance)).toFixed(2);
+    });
 
-    userDatabase.find({username: userObj.username}, (err, user) =>{
+    newTickerList.push(tickerListObj);
+    console.log("new ticker list");
+    console.log(newTickerList)
+    let returnObj = {};
+    userDatabase.update({username: username},{$set: {tickerList: newTickerList, balance: newBalance}})
+
+    userDatabase.findOne({username: username}, (err, user) =>{
+        console.log("user after last find")
+        console.log(user)
         returnObj = user; 
         console.log(returnObj)
         res.setHeader("Content-Type", "application/json");
