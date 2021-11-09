@@ -42,35 +42,32 @@ app.post("/getStockPrice", function(req, res) {
 });
 
 app.post("/updateUserDataAfterBuy", function(req, res) {
-    let tickerListObj = req.body.newObj;
-    let balance = req.body.userBalance;
     let username = req.body.username;
-    let newTickerList = []
-    let newBalance = 0;
+    let newTickerList = [];
+    let newBuyObj = {
+         ticker: req.body.ticker,
+         balance: req.body.balance,
+         sharesBought: req.body.shareAmt,
+         sharePriceWhenBought: req.body.sharePrice,
+         costOfPurchase: req.body.cost,
+         
+    }
     
     userDatabase.findOne({username: username}, (err, user) =>{
-        console.log(user)
-        console.log("ticker list before push")
-        console.log(user.tickerList)
+        //console.log(user.tickerList);
         newTickerList = user.tickerList;
-        newBalance = (parseFloat(user.balance) + parseFloat(balance)).toFixed(2);
+        newTickerList.push(newBuyObj)
+        userDatabase.update({username: username},{$set: {tickerList: newTickerList, balance: newBuyObj.balance}})
+        userDatabase.findOne({username: username}, (err, user) =>{
+            console.log(user.tickerList)
+            res.setHeader("Content-Type", "application/json");
+            res.write(JSON.stringify({data: user}));
+            res.end();
+        });
     });
+ 
 
-    newTickerList.push(tickerListObj);
-    console.log("new ticker list");
-    console.log(newTickerList)
-    let returnObj = {};
-    userDatabase.update({username: username},{$set: {tickerList: newTickerList, balance: newBalance}})
-
-    userDatabase.findOne({username: username}, (err, user) =>{
-        console.log("user after last find")
-        console.log(user)
-        returnObj = user; 
-        console.log(returnObj)
-        res.setHeader("Content-Type", "application/json");
-        res.write(JSON.stringify({data: returnObj}));
-        res.end();
-    });
+    
 
     
 });
@@ -101,7 +98,7 @@ app.post("/login", function(req, res) {
         if(user != null){
             console.log("login success")
             res.setHeader("Content-Type", "application/json");
-            res.write(JSON.stringify({loginSuccess: true, data: user}));
+            res.write(JSON.stringify({loginSuccess: true, data: user, password: password}));
             res.end();
         }
         else{
@@ -142,6 +139,4 @@ app.listen(80, function() {
     console.log("Server is now running.");
 });
 
-function getUserObj(){
 
-}
