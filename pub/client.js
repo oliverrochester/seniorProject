@@ -96,24 +96,11 @@ let vm = {
         alert("div clicked")
         },
 
-        updatePositions(userObj){
-        console.log("console logging user at update positions")
-        //   console.log(userObj)
-        // userObj.tickerList.forEach((pos) =>{
-        //     let sharesBought = pos.shareAmt;
-        //     let initialPurchaseCost = pos.costOfPurchase;
+        updatePositions(){
 
-        //     $.post("/getStockPrice", {ticker: tickerName,}, dataFromServer => {
-        //         tickerPrice = dataFromServer.tickerPrice;
-        //         let updatedCost = parseFloat(purchaseStockPrice)* parseFloat(sharesBought);
-        //         pos.profits = parseFloat(updatedCost) - parseFloat(initialPurchaseCost);
-        //     });
-
-        // });
-
-        // $.post("/refreshPositions", {tickerList: user.tickerList, username: this.username}, dataFromServer => {
-        //     this.positions = dataFromServer.data.tickerList;
-        // });
+            $.post("/refreshPositions", {username: this.username}, dataFromServer => {
+                
+            }); 
 
         },
 

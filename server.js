@@ -50,11 +50,11 @@ app.post("/updateUserDataAfterBuy", function(req, res) {
          sharesBought: req.body.shareAmt,
          sharePriceWhenBought: req.body.sharePrice,
          costOfPurchase: req.body.cost,
+         profit: "0",
          
     }
     
     userDatabase.findOne({username: username}, (err, user) =>{
-        //console.log(user.tickerList);
         newTickerList = user.tickerList;
         newTickerList.push(newBuyObj)
         userDatabase.update({username: username},{$set: {tickerList: newTickerList, balance: newBuyObj.balance}})
@@ -74,13 +74,20 @@ app.post("/updateUserDataAfterBuy", function(req, res) {
 
 
 app.post("/refreshPositions", function(req, res) {
-
-    let tickerList = req.body.tickerList;
-    let returnObj = {};
-    userDatabase.update({username: userObj.username},{$set: {tickerList: tickerList, }})
-    userDatabase.find({username: userObj.username}, (err, user) =>{
-        returnObj = user; 
+    let newTickerList;
+    userDatabase.findOne({username: username}, (err, user) =>{
+        newTickerList = user.tickerList;
+        for(let i = 0; i < newTickerList.length; i++){
+            let tickerPrice = null;
+            const process = spawn('py', ['./getTickerData.py', newTickerList[i].ticker])
+            process.stdout.on('data', (data)=>{
+            tickerPrice = data.toString();
+            let newCost = parseFloat(tickerPrice) * parseFloat(newTickerList[i].sharesBought)
+            newTickerList[i].profit = newCost - parseFloat(newTickerList[i].costOfPurchase)
+    })
+        }
     });
+    
     res.setHeader("Content-Type", "application/json");
     res.write(JSON.stringify({data: returnObj}));
     res.end();
