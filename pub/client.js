@@ -51,7 +51,6 @@ let vm = {
 
         goToMainPage(data){
             this.viewType = "mainPage";
-            console.log(data)
             this.username = data.data.username
             this.user = data.data;
             this.positions = data.data.tickerList;
@@ -62,46 +61,51 @@ let vm = {
         buyStock(){
             let tickerToPurchase = document.getElementById("tickerToPurchase").value;
             let numberOfShares = document.getElementById("shareAmt").value;
-            numberOfShares = parseFloat(numberOfShares);
+            numberOfShares = parseInt(numberOfShares);
             let tickerPrice;
             let costOfPurchase;
             let newBalance;
- 
-            $.post("/getStockPrice", {ticker: tickerToPurchase,}, dataFromServer => {
-                tickerPrice = dataFromServer.tickerPrice;
-                tickerPrice = parseFloat(tickerPrice)
-                costOfPurchase = (numberOfShares * tickerPrice).toFixed(2);
-                newBalance = this.userBalance - costOfPurchase;
-                let obj = {
-                    ticker: tickerToPurchase,
-                    shareAmt: numberOfShares,
-                    sharePrice: tickerPrice,
-                    cost: costOfPurchase,
-                    username: this.username,
-                    balance: newBalance,
-                }
-                this.updateTickerListAfterBuy(obj)
-            });   
+            console.log(typeof(numberOfShares))
+            if(typeof(numberOfShares) === "number"){
+                $.post("/getStockPrice", {ticker: tickerToPurchase,}, dataFromServer => {
+                    tickerPrice = dataFromServer.tickerPrice;
+                    tickerPrice = parseFloat(tickerPrice)
+                    costOfPurchase = (numberOfShares * tickerPrice).toFixed(2);
+                    newBalance = this.userBalance - costOfPurchase;
+                    let dateTimePuchased = this.getDateAndTime();
+                    let obj = {
+                        ticker: tickerToPurchase,
+                        shareAmt: numberOfShares,
+                        sharePrice: tickerPrice,
+                        cost: costOfPurchase,
+                        username: this.username,
+                        balance: newBalance,
+                        date: dateTimePuchased,
+                        profit: 0.00,
+                    }
+                    this.updateTickerListAfterBuy(obj)
+                });
+            }
+            else{
+                alert("invalid share amount")
+            }
+            
         },
 
         updateTickerListAfterBuy(obj){
             $.post("/updateUserDataAfterBuy", obj, dataFromServer => {
-                console.log(dataFromServer)
+                //console.log(dataFromServer)
                 this.positions = dataFromServer.data.tickerList;
-                this.userBalance = dataFromServer.data.balance;
+                this.userBalance = dataFromServer.data.balance
             }); 
+            
         },
 
-        doalert(){
-        alert("div clicked")
-        },
-
-        updatePositions(){
-
-            $.post("/refreshPositions", {username: this.username}, dataFromServer => {
-                
-            }); 
-
+        updatePosition(datePositionWasBought){
+            //alert('refresh clicked');
+            $.post("/updateProfitOfPosition", {date: datePositionWasBought, username: this.username}, dataFromServer => {
+                this.positions = dataFromServer.data.tickerList;
+            });
         },
 
         getTickerData(){
@@ -160,7 +164,14 @@ let vm = {
             searchStatus.innerHTML = "";
             searchBtn.disabled = false;
         });
+        },
+
+        getDateAndTime(){
+            let currentdate = Date();
+            console.log(currentdate);
+            return(currentdate);
         }
+        
     },
     computed: { //computed properties (methods that compute stuff based on "data" properties)
         //Do not change the value of a property from within these functions.  Side-effects

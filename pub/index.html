@@ -14,7 +14,7 @@
         <div id="navBar">
             <div id="navPageTitle"><h1> Paper Trading Web Application </h1></div>
         </div>
-
+        
         <div id="loginOrCreateAccount" v-if="viewType=='landingPage'">
             <div id="loginDiv" class="openingPage">
                 <div class="credentialDivsElements"><h3>Login</h3></div>
@@ -45,11 +45,14 @@
             &nbsp;
         </div>
 
-        <div id="balanceDiv" v-if="viewType=='mainPage'">{{userBalance}}$ Equity</div>
+        
         <div id="mainPageContainer" v-if="viewType=='mainPage'">
             <div id="mainPage" v-if="viewType=='mainPage'">
 
                 <div id="buyAndSellStocksDiv" class="mainPageDivs">
+                    <div>Equity</div>
+                    <div id="balanceDiv" v-if="viewType=='mainPage'">{{userBalance}}$</div>
+                    <hr>
                     <div id="buyStockDiv">
                         
                         <h3>Buy Stock</h3>
@@ -58,6 +61,7 @@
                         <h4>How many shares?</h4>
                         <input id="shareAmt" class="buySellInputs"></input>
                         <button class="buySellButtons" v-on:click="buyStock()">Buy Now</button>
+                        <hr>
                         
                     </div>
                     <div id="sellStockDiv">
@@ -115,19 +119,23 @@
                 </div>
 
                 <div id="positionsDiv" class="mainPageDivs">
+                    
                     <h3>Positions</h3>
-                    <button v-on:click="updatePositions()">Refresh</button>
+                    
                     <div>
                         <p id="ps">Symbol&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p>
                         <p id="ps">Shares &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  </p>
                         <p id="ps">Gains/Losses</p>
                     </div>
                     
-                    <div class="positionsData" v-for="ticker in positions" v-on:click="doalert()" >
+                    <div class="positionsData" v-for="ticker in positions" >
                         <ul>
+                            <button id="refreshButton" v-on:click="updatePosition(ticker.date)">&#8634;</button>
                             <p id="ps">{{ticker.ticker}} &nbsp;  &nbsp;  &nbsp; &nbsp; &nbsp;</li>    
                             <p id="ps">{{ticker.sharesBought}} &nbsp;  &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;</p>
-                            <p id="ps">00.00 &nbsp; &nbsp; &nbsp;</p>
+                            <p id="ps" v-if="ticker.profit >= 0" style="{ color: green}">{{ticker.profit}} &nbsp; &nbsp; &nbsp;</p>
+                            <p id="ps" v-if="ticker.profit < 0" style="{ color: red}">{{ticker.profit}} &nbsp; &nbsp; &nbsp;</p>
+                            <button id="sellPositionBtn">Sell Position</button>
                         </ul>
                         
                     </div>
@@ -140,7 +148,6 @@
         
 </body>
 <script src="vue.global.js"></script>
-<script src="stocks.js"></script>
 <script src="jquery-3.5.1.js"></script>
 <script src="client.js"></script>
 </html>

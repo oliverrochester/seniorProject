@@ -50,6 +50,7 @@ app.post("/updateUserDataAfterBuy", function(req, res) {
          sharesBought: req.body.shareAmt,
          sharePriceWhenBought: req.body.sharePrice,
          costOfPurchase: req.body.cost,
+         date: req.body.date,
          profit: "0",
          
     }
@@ -59,39 +60,77 @@ app.post("/updateUserDataAfterBuy", function(req, res) {
         newTickerList.push(newBuyObj)
         userDatabase.update({username: username},{$set: {tickerList: newTickerList, balance: newBuyObj.balance}})
         userDatabase.findOne({username: username}, (err, user) =>{
-            console.log(user.tickerList)
             res.setHeader("Content-Type", "application/json");
             res.write(JSON.stringify({data: user}));
             res.end();
         });
-    });
- 
-
-    
-
-    
+    });  
 });
 
 
 app.post("/refreshPositions", function(req, res) {
+    let username = req.body.username;
     let newTickerList;
     userDatabase.findOne({username: username}, (err, user) =>{
         newTickerList = user.tickerList;
-        for(let i = 0; i < newTickerList.length; i++){
-            let tickerPrice = null;
-            const process = spawn('py', ['./getTickerData.py', newTickerList[i].ticker])
-            process.stdout.on('data', (data)=>{
-            tickerPrice = data.toString();
-            let newCost = parseFloat(tickerPrice) * parseFloat(newTickerList[i].sharesBought)
-            newTickerList[i].profit = newCost - parseFloat(newTickerList[i].costOfPurchase)
-    })
-        }
+        console.log(newTickerList);
+
+
+        
+        // for(let i = 0; i < newTickerList.length; i++){
+        //     let tickerPrice = null;
+        //     const process = spawn('py', ['./getTickerData.py', newTickerList[i].ticker])
+        //     process.stdout.on('data', (data)=>{
+        //         tickerPrice = data.toString();
+        //         let newCost = parseFloat(tickerPrice) * parseFloat(newTickerList[i].sharesBought);
+        //         newTickerList[i].profit = (newCost - parseFloat(newTickerList[i].costOfPurchase)).toString();
+        //     })
+        // }
+
+        // console.log(newTickerList);
+        // userDatabase.update({username: username},{$set: {tickerList: newTickerList}});
+        // userDatabase.findOne({username: username}, (err, user) =>{
+        //     res.setHeader("Content-Type", "application/json");
+        //     res.write(JSON.stringify({data: user}));
+        //     res.end();
+        // });
     });
     
-    res.setHeader("Content-Type", "application/json");
-    res.write(JSON.stringify({data: returnObj}));
-    res.end();
 });
+
+app.post("/updateProfitOfPosition", function(req, res) {
+    let username = req.body.username;
+    let dateBought = req.body.date;   
+    let newTickerList; 
+    userDatabase.findOne({username: username}, (err, user) =>{
+        let tickerData;
+        newTickerList = user.tickerList;
+        for(let i = 0; i<newTickerList.length; i++){
+            if(newTickerList[i].date == dateBought){
+                console.log(newTickerList[i].date);
+                console.log(dateBought);
+                const process = spawn('py', ['./getTickerData.py', newTickerList[i].ticker])
+                process.stdout.on('data', (data)=>{
+                    tickerData = parseFloat(data);
+                    console.log("ticker data  " + tickerData);
+                    console.log("number of shares  " + newTickerList[i].sharesBought)
+
+                    newTickerList[i].profit = (tickerData * parseFloat(newTickerList[i].sharesBought)) - parseFloat(newTickerList[i].costOfPurchase);
+                    newTickerList[i].profit = newTickerList[i].profit.toFixed(2)
+                    console.log(newTickerList[i].profit)
+                    userDatabase.update({username: username},{$set: {tickerList: newTickerList}})
+                    userDatabase.findOne({username: username}, (err, user) =>{
+                        res.setHeader("Content-Type", "application/json");
+                        res.write(JSON.stringify({data: user}));
+                        res.end();  
+                    });
+                })    
+            }
+        }  
+    })
+    
+});
+
 
 //Server login function, gathers username and password from req object
 //Searches database to see if that username with the given password exists
