@@ -67,7 +67,6 @@ app.post("/updateUserDataAfterBuy", function(req, res) {
     });  
 });
 
-
 app.post("/refreshPositions", function(req, res) {
     let username = req.body.username;
     let newTickerList;
@@ -131,6 +130,47 @@ app.post("/updateProfitOfPosition", function(req, res) {
     
 });
 
+app.post("/sellPosition", function(req, res) {
+    let date = req.body.date;
+    let username = req.body.username;
+    let newTickerList = [];
+    let tickerPrice;
+    let newBalance;
+    userDatabase.findOne({username: username}, (err, user) =>{
+        newTickerList = user.tickerList;
+        let ticker;
+        let posInArray;
+        let sharesBought;
+        let cost;
+        for(let i = 0; 0 < newTickerList.length; i++){
+            if(newTickerList[i].date == date){
+                ticker = newTickerList[i].ticker
+                posInArray = i;
+                cost = newTickerList[i].costOfPurchase;
+                sharesBought = newTickerList[i].sharesBought;
+                break;
+            }
+        }
+        const process = spawn('py', ['./getTickerData.py', ticker])
+        process.stdout.on('data', (data)=>{
+        tickerPrice = data.toString();
+        let sellingPrice = parseFloat(tickerPrice) * parseFloat(sharesBought);
+        newBalance = parseFloat(user.balance) + parseFloat(sellingPrice);
+        newTickerList.splice(posInArray, 1);
+        userDatabase.update({username: username},{$set: {tickerList: newTickerList, balance: newBalance}})
+        userDatabase.findOne({username: username}, (err, user) =>{
+            res.setHeader("Content-Type", "application/json");
+            res.write(JSON.stringify({data: user}));
+            res.end();  
+        });
+    })
+
+        
+    }); 
+
+});
+
+
 
 //Server login function, gathers username and password from req object
 //Searches database to see if that username with the given password exists
@@ -180,6 +220,8 @@ app.post("/createAccount", function(req, res) {
         }
     });
 });
+
+
 
 app.listen(80, function() {
     console.log("Server is now running.");
