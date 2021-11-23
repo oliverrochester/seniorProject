@@ -37,7 +37,7 @@
                     <button v-on:click="createAccount()" id="credentialBtns">Create Account</button>
                 </div>
             </div>
-            <!--<div id="createAccountorLoginStatus"></div>-->
+            <div id="createAccountorLoginStatus"></div>
         </div>
 
         <div id="landingPageLogoDiv" v-if="viewType=='landingPage'">
@@ -54,15 +54,15 @@
                     <div id="balanceDiv" v-if="viewType=='mainPage'">{{userBalance}}$</div>
                     <hr>
                     <div id="buyStockDiv">
-                        
                         <h3>Buy Stock</h3>
                         <h4>Enter Stock Ticker</h4>
-                        <input id="tickerToPurchase" class="buySellInputs"></input>
+                        <input id="tickerToPurchase" class="inputs"></input>
                         <h4>How many shares?</h4>
-                        <input id="shareAmt" class="buySellInputs"></input>
+                        <input id="shareAmt" class="inputs"></input>
                         <button class="buySellButtons" v-on:click="buyStock()">Buy Now</button>
                         <hr>
-                        
+                    </div>
+                    <div id="newsDiv">
                     </div>
                     
                 </div>

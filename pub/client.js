@@ -16,29 +16,27 @@ let vm = {
     }, 
     methods: { //An object that contains whatever methods we need.
         createAccount(){
-        let status = document.getElementById("createAccountorLoginStatus");
-        let username = String(document.getElementById("userCreateAct").value);
-        let password = String(document.getElementById("passwordCreateAct").value);
+            let status = document.getElementById("createAccountorLoginStatus");
+            let username = String(document.getElementById("userCreateAct").value);
+            let password = String(document.getElementById("passwordCreateAct").value);
 
-        // var bytes  = CryptoJS.AES.decrypt(ciphertext.toString(), 'secret key 123');
-        // var plaintext = bytes.toString(CryptoJS.enc.Utf8);
-        // console.log(plaintext)
+            // var bytes  = CryptoJS.AES.decrypt(ciphertext.toString(), 'secret key 123');
+            // var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+            // console.log(plaintext)
 
-        if(password.length < 8){
-            status.innerHTML = "password must be at least 8 characters long"
-        }
-        else{
-            var ciphertext = CryptoJS.AES.encrypt(password, 'secret key 123');
-            console.log(ciphertext)
-            $.post("/createAccount", {username: username, password: password}, dataFromServer => {
-                if(!dataFromServer.createAccountSuccess){
-                    status.innerHTML = "Account with that username already exists"
-                }
-                else{
-                    status.innerHTML = "Account created successfully"
-                }
-            }); 
-        }
+            if(password.length < 8){
+                status.innerHTML = "password must be at least 8 characters long"
+            }
+            else{
+                $.post("/createAccount", {username: username, password: password}, dataFromServer => {
+                    if(!dataFromServer.createAccountSuccess){
+                        status.innerHTML = "Account with that username already exists"
+                    }
+                    else{
+                        status.innerHTML = "Account created successfully"
+                    }
+                }); 
+            }
         
         },
 

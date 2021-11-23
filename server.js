@@ -8,7 +8,7 @@ const spawn = require('child_process').spawn;
 
 const userDatabase = new Datastore('userDatabase.db');
 userDatabase.loadDatabase();
-userDatabase.insert({username: "orochest", password: "Skipper99?", tickerList: [], balance: 100000.00})
+//userDatabase.insert({username: "orochest", password: "Skipper99?", tickerList: [], balance: 100000.00})
 
 //tickerList in database has array form of [stockTicker, how many shares bought, price of stock when bought, total cost of purchase]
 
@@ -205,6 +205,8 @@ app.post("/createAccount", function(req, res) {
     let username = req.body.username;
     let password = req.body.password; 
 
+    console.log(username);
+    console.log(password);
     userDatabase.findOne({username: username}, (err, user) =>{
         if(user != null){
             console.log("Account with this username already exists");
@@ -214,6 +216,7 @@ app.post("/createAccount", function(req, res) {
         }
         else{
             userDatabase.insert({username: username, password: password, tickerList: [], balance: 100000});
+            console.log("Account created successfully")
             res.setHeader("Content-Type", "application/json");
             res.write(JSON.stringify({createAccountSuccess: true}));
             res.end();

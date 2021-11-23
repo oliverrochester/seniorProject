@@ -8,21 +8,28 @@
 #navPageTitle{
     text-align: center;
     color: rgb(161, 161, 122);
-    background-color: black;
+    background-color: rgb(36, 34, 34);
     margin-top: -21px;
     margin-bottom: -21px;
     padding: 20px;
     
 }
 
+.navBarDivs{
+    display: inline-block;
+}
+
 
 #navbar{
     width: 100vw;
-}
-
-.openingPage{
     
 }
+
+#createAccountorLoginStatus{
+    color: white;
+    background-color: black;
+}
+
 
 #landingPageLogoDiv{
     display: inline-block;
@@ -102,19 +109,20 @@
    text-align: center; 
    font-family: Courier;
    /*background-color: rgb(24, 23, 23);*/
-   background-image: linear-gradient(to right, rgb(70, 70, 70), rgb(46, 45, 45));
+   background-color: black;
 }
 
 #stockDataDiv{
     text-align: center;
     width: 500px;
     /*background-color: rgb(14, 13, 13);*/
-    background-image: linear-gradient(to right, rgb(46, 45, 45), rgb(27, 27, 27));
+    background-color: black;
 }
 
 #positionsDiv{
-    background-image: linear-gradient(to right, rgb(27, 27, 27), rgb(10, 10, 10));
-    text-align: left;
+    background-color: black;
+    text-align: center;
+    width: 391px;
     
 }
 
@@ -214,12 +222,13 @@
     margin: 10px;
     border-radius: 5px;
     border: none;
-    background-color: black;
+    background-color: rgb(49, 48, 48);
     color: white;
+    padding: 7px;
 }
 
 .timeFrameButton:hover{
-    background-color:darkgrey;
-    color: black;
+    background-color:rgb(216, 215, 215);
+    color: rgb(5, 5, 5);
     transition: 0.5s ease-in-out;
 }
