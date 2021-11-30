@@ -16,6 +16,8 @@ let vm = {
             chartData: null,
             news: [],
             hasNews: false,
+            greenColor: 'green',
+            redColor: 'red',
         }
     }, 
     methods: {

@@ -8,7 +8,7 @@ const spawn = require('child_process').spawn;
 
 const userDatabase = new Datastore('userDatabase.db');
 userDatabase.loadDatabase();
-//userDatabase.insert({username: "orochest", password: "Skipper99?", tickerList: [], balance: 100000.00})
+userDatabase.insert({username: "orochest", password: "Skipper99?", tickerList: [], balance: 100000.00})
 
 //tickerList in database has array form of [stockTicker, how many shares bought, price of stock when bought, total cost of purchase]
 

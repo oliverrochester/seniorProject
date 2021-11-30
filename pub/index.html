@@ -158,8 +158,8 @@
                             <button id="refreshButton" v-on:click="updatePosition(ticker.date)">&#8634;</button>
                             <p id="ps">{{ticker.ticker}} &nbsp;  &nbsp;  &nbsp; &nbsp; &nbsp;</li>    
                             <p id="ps">{{ticker.sharesBought}} &nbsp;  &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;</p>
-                            <p id="ps" v-if="ticker.profit >= 0" style="{ color: green}">{{ticker.profit}} &nbsp; &nbsp; &nbsp;</p>
-                            <p id="ps" v-if="ticker.profit < 0" style="{ color: red}">{{ticker.profit}} &nbsp; &nbsp; &nbsp;</p>
+                            <p id="ps" v-if="ticker.profit >= 0" v-bind:style="{color: greenColor}">{{"+" + ticker.profit}} &nbsp; &nbsp; &nbsp;</p>
+                            <p id="ps" v-if="ticker.profit < 0" v-bind:style="{color: redColor}">{{ticker.profit}} &nbsp; &nbsp; &nbsp;</p>
                             <button id="sellPositionBtn" v-on:click="sellPosition(ticker.date)">Sell Position</button>
                         </div>
                         
