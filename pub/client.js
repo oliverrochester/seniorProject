@@ -1,6 +1,6 @@
-//var CryptoJS = require("crypto-js");
+
 let vm = {
-    data() { //properties of our object must be established here, and are returned as an object.
+    data() {
         return {
             username: "",
             viewType: "landingPage",
@@ -12,9 +12,13 @@ let vm = {
             totalProfits: 0.00,
             chart: undefined,
             showCanvas: false,
+            performers: [],
+            chartData: null,
+            news: [],
+            hasNews: false,
         }
     }, 
-    methods: { //An object that contains whatever methods we need.
+    methods: {
         createAccount(){
             let status = document.getElementById("createAccountorLoginStatus");
             let username = String(document.getElementById("userCreateAct").value);
@@ -57,7 +61,42 @@ let vm = {
             this.positions = data.data.tickerList;
             this.userBalance = data.data.balance;
             this.password = data.password;
+            this.scrapeWebForTopPerformers()
             
+        },
+
+        scrapeWebForTopPerformers(){
+            let newDataArr = [];
+            $.post("/getTopPerformers", {}, dataFromServer => {
+                console.log(dataFromServer.topPerformers)
+                console.log(typeof(dataFromServer.topPerformers))
+                let dataArr = dataFromServer.topPerformers.split(", ");
+                for(let i = 0; i < dataArr.length; i++){
+                    
+                    let x = this.removeBadChars(dataArr[i])
+                    newDataArr.push(x)
+                }
+                this.performers = newDataArr;
+            });
+        },
+
+        removeBadChars(str){
+            let retStr = ''
+            for(let i = 0; i < str.length; i++){
+                if(str[i] == "'"){
+                    continue
+                }
+                else if(str[i] == "]"){
+                    continue
+                }
+                else if(str[i] == "["){
+                    continue
+                }
+                else{
+                    retStr += str[i];
+                }
+            }
+            return retStr;
         },
 
         buyStock(){
@@ -81,7 +120,7 @@ let vm = {
                             tickerPrice = dataFromServer.tickerPrice;
                             tickerPrice = parseFloat(tickerPrice)
                             costOfPurchase = (numberOfShares * tickerPrice).toFixed(2);
-                            newBalance = this.userBalance - costOfPurchase;
+                            newBalance = (this.userBalance - costOfPurchase).toFixed(2);
                             let dateTimePuchased = this.getDateAndTime();
                             let obj = {
                                 ticker: tickerToPurchase,
@@ -148,90 +187,159 @@ let vm = {
             return retStr;
         },
 
-        parseDataForGraph(timeFrame, data){
-            console.log(data);
+        parseDataForGraph(timeFrame){
             let newdata = [];
             if(timeFrame == "initial"){
-                for(let i = 0; i < data.length; i++){
-                    if(data.length - i <= 7){
-                        newdata.push(data[i]);
+                for(let i = 0; i < this.chartData.length; i++){
+                    if(this.chartData.length - i <= 7){
+                        newdata.push(this.chartData[i]);
                     }
                 }
             }
             else if(timeFrame == "1 Year"){
-                for(let i = 0; i < data.length; i++){
-                    if(i % 10 == 0){
-                        newdata.push(data[i]);
-                    }
+                for(let i = 0; i < this.chartData.length; i++){
+                    
+                    newdata.push(this.chartData[i]);
+                    
                 }
             }
             else if(timeFrame == "6 Months"){
-                let range = data.length / 2;
+                let range = this.chartData.length / 2;
                 range = range.toFixed(0);
-                for(let i = range; i < data.length; i++){
-                    if(i % 15 == 0){
-                        
-                        newdata.push(data[i]);
-                    }
+                for(let i = range; i < this.chartData.length; i++){
+                    newdata.push(this.chartData[i]);           
                 }
             }
-            //console.log(newdata)
             return newdata;
+            
+        },
+
+        changeChart(timeFrame){
+            if(this.chart != undefined){
+                this.chart.destroy();
+            }
+            let stockticker = document.getElementById("tickerData").value;
+            let newData = this.parseDataForGraph(timeFrame);
+            let newTime = [];
+            
+            for(let i = 0; i < newData.length; i++){
+                newTime.push(i);
+            }
+            let lineColor;
+            let lastIndex = newData.length - 1;
+            if(newData[0] >= newData[lastIndex]){
+                lineColor = "Red";
+            }
+            else{
+                lineColor = "Green";
+            }
+            const ctx = document.getElementById('chart').getContext('2d');
+            let myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: newTime,
+                    datasets: [{
+                        label: stockticker + " " + timeFrame,
+                        data: newData,
+                        backgroundColor: null,
+                        
+                        borderColor: lineColor,
+                        borderWidth: 1,
+                        pointRadius: 0,
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+            this.chart = myChart;
+        },
+
+        getNews(ticker){
+            let apiURL1 = "https://api.marketaux.com/v1/news/all?symbols="
+            let apiURL2 = "&filter_entities=true&language=en&api_token=hB8F0psRHewWAFT8K4svlHvsm6DDtbigLgSxFzAh"
+            let finalAPI = apiURL1 + ticker + apiURL2;
+            fetch(finalAPI)
+            .then(response => response.json())
+            .then(data => {
+                console.log("news");
+                console.log(data);
+                let newsArr = [];
+                data.data.forEach((newsStory)=>{
+                    let obj = {};
+                    obj.title = newsStory.title;
+                    obj.image = newsStory.image_url;
+                    newsArr.push(obj);
+                })
+                this.news = newsArr;
+                this.hasNews = true;
+            });
         },
 
         getTickerData(timeFrame){
+            //api key   hB8F0psRHewWAFT8K4svlHvsm6DDtbigLgSxFzAh
             this.showCanvas = true;
             let stockticker = document.getElementById("tickerData").value;
             let apiURL = this.getDateRangeAndAPIString(stockticker);
-            console.log(apiURL);
             
-            let year = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            let sevenDay = ["6","5","4","3","2","1","Now"];
-            let sixMonth = ["5.5","5","4.5","4","3.5","3","2.5","2","1.5","1",".5","Now"];
-            let time = []
             let description = "";
-            if(timeFrame == "initial"){
-                time = sevenDay;
+            if(timeFrame == "initial"){                
                 description = "1 Week";
             }
             else if(timeFrame == "1 Year"){
-                time = year;
                 description = "1 Year";
             }
             else if(timeFrame == "6 Months"){
-                time = sixMonth;
                 description = "6 Months"
             }
             fetch(apiURL)
             .then(response => response.json())
             .then(data => {
                 try{
-                    let newData = this.parseDataForGraph(timeFrame, data.results);
-                    let finalData = [];
-                    newData.forEach((open)=>{
-                        finalData.push(open.o);
+                    console.log(data);
+                    let newTime = [];
+                    let newData = [];
+                    data.results.forEach((open)=>{
+                        newData.push(open.o);
                     })
-                    console.log(finalData);
+                    this.chartData = newData;
+                    let finalData = this.parseDataForGraph(timeFrame);     
+
+                    for(let i = 0; i < finalData.length; i++){
+                        newTime.push(i);
+                    }
+                    
                     if(this.chart != undefined){
                         this.chart.destroy();
                     }
 
+                    let lineColor;
+                    let lastIndex = finalData.length - 1;
+                    if(finalData[0] >=finalData[lastIndex]){
+                        lineColor = "Red";
+                    }
+                    else{
+                        lineColor = "Green";
+                    }
                     
                     const ctx = document.getElementById('chart').getContext('2d');
                     let myChart = new Chart(ctx, {
                         type: 'line',
                         data: {
-                            labels: time,
+                            labels: newTime,
                             datasets: [{
                                 label: stockticker + " " + description,
                                 data: finalData,
                                 backgroundColor: [
                                     
                                 ],
-                                borderColor: [
-                                    
-                                ],
-                                borderWidth: 1
+                                borderColor: lineColor,
+                                borderWidth: 1,
+                                pointRadius: 0,
                             }]
                         },
                         options: {
@@ -245,6 +353,7 @@ let vm = {
 
                     this.chart = myChart;
                 } catch(error){
+                    console.log(error)
                     alert("5 API Calls Per Minute Reached");
                 }
                 
@@ -307,6 +416,8 @@ let vm = {
             searchStatus.innerHTML = "";
             searchBtn.disabled = false;
         });
+
+        this.getNews(stockticker);
         },
 
         getDateAndTime(){
@@ -319,14 +430,26 @@ let vm = {
             $.post("/sellPosition", {username: this.username, date: date}, dataFromServer => {
                 //console.log(dataFromServer)
                 this.positions = dataFromServer.data.tickerList;
-                this.userBalance = dataFromServer.data.balance
+                this.userBalance = dataFromServer.data.balance;
+                let newProfit = 0.0;
+                this.positions.forEach((pos)=>{
+                    newProfit += parseFloat(pos.profit);
+                })
+                this.totalProfits = newProfit;
             }); 
+        },
+
+        restartFresh(){
+            $.post("/restartFresh", {username: this.username}, dataFromServer => {
+                //console.log(dataFromServer)
+                this.positions = dataFromServer.data.tickerList;
+                this.userBalance = dataFromServer.data.balance;
+                this.totalProfits = 0.00;
+            });
         }
         
     },
-    computed: { //computed properties (methods that compute stuff based on "data" properties)
-        //Do not change the value of a property from within these functions.  Side-effects
-        //will not be reliable because Vue might skip calls to computed functions as an optimization.
+    computed: {
     }
 }
 

@@ -232,3 +232,38 @@
     color: rgb(5, 5, 5);
     transition: 0.5s ease-in-out;
 }
+
+#restartBtn{
+    margin-bottom: 10px;
+    border: none;
+    background-color: rgb(49, 48, 48);
+    color: white;
+    padding: 7px;
+    border-radius: 5px;
+}
+
+#restartBtn:hover{
+    background-color:rgb(216, 215, 215);
+    color: rgb(5, 5, 5);
+    transition: 0.5s ease-in-out;
+}
+
+#performersData{
+    text-align: left;
+    padding-left: 8px;
+}
+
+#positionsDisplay{
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#storyDiv{
+    width: 400px;
+    text-align: center;
+    margin: auto;
+}
+
+#storyIMG{
+    width: 200px;
+}

@@ -1,17 +1,20 @@
 from bs4 import BeautifulSoup
-
 import requests
+import re
 
-session = requests.session()
+url = "https://finance.yahoo.com/gainers/"
+try:
+    r = requests.get(url)
+    soup = BeautifulSoup(r.content, 'lxml')
+    table = soup.find('table', {'class': 'W(100%)'})
+    regex = r"(title=\"((\w+ ?)*))"
+    ans = re.findall(regex, str(table))
+    retArr = []
+    for match in ans:
+        retArr.append(match[1])
+    print(retArr)
+except:
+    print("False")
 
-response = session.get('https://finance.yahoo.com/gainers/')
 
-if response.status_code == 200:
-
-    page = response.text
     
-    soup = BeautifulSoup(page, "lxml")
-
-    market = soup.find('tbody').text
-
-    print(market)

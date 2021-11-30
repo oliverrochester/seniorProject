@@ -170,6 +170,30 @@ app.post("/sellPosition", function(req, res) {
 
 });
 
+app.post("/restartFresh", function(req, res) {
+    let username = req.body.username;
+    let newTickerList = [];
+    userDatabase.findOne({username: username}, (err, user) =>{
+        userDatabase.update({username: username},{$set: {tickerList: newTickerList, balance: 100000.00}})
+        userDatabase.findOne({username: username}, (err, user) =>{
+            res.setHeader("Content-Type", "application/json");
+            res.write(JSON.stringify({data: user}));
+            res.end();
+        });
+    });
+});
+
+app.post("/getTopPerformers", function(req, res) {
+    let performers = null;
+    const process = spawn('py', ['./getPerformers.py', "yes"])
+    process.stdout.on('data', (data)=>{
+        performers = data.toString();
+        res.setHeader("Content-Type", "application/json");
+        res.write(JSON.stringify({topPerformers: performers}));
+        res.end();
+    })
+});
+
 
 
 //Server login function, gathers username and password from req object
@@ -215,7 +239,7 @@ app.post("/createAccount", function(req, res) {
             res.end();
         }
         else{
-            userDatabase.insert({username: username, password: password, tickerList: [], balance: 100000});
+            userDatabase.insert({username: username, password: password, tickerList: [], balance: 100000.00});
             console.log("Account created successfully")
             res.setHeader("Content-Type", "application/json");
             res.write(JSON.stringify({createAccountSuccess: true}));

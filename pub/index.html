@@ -50,6 +50,7 @@
             <div id="mainPage" v-if="viewType=='mainPage'">
 
                 <div id="buyAndSellStocksDiv" class="mainPageDivs">
+                    <button id="restartBtn" v-on:click="restartFresh()">Restart From Scratch</button>
                     <div>Equity</div>
                     <div id="balanceDiv" v-if="viewType=='mainPage'">{{userBalance}}$</div>
                     <hr>
@@ -63,11 +64,13 @@
                         <hr>
                     </div>
                     <div id="newsDiv">
+                        <h2>Top 25 Performers</h2>
+                        <div id="performersData" v-for="performer in performers" >
+                            <p>{{"- " + performer}}</p>
+                        </div>
                     </div>
                     
                 </div>
-
-                
 
                 <div id="stockDataDiv" class="mainPageDivs">
                     <div id="searchDiv">
@@ -83,10 +86,10 @@
                     <div id="chartDiv" v-if="showCanvas">
                         <canvas id="chart" ></canvas>
                         <div id="timeFrameButtonsDiv">
-                            <button class="timeFrameButton" v-on:click="getTickerData('1 Year')">1 Year</button>
-                            <button class="timeFrameButton" v-on:click="getTickerData('6 Months')">6 Months</button>
+                            <button class="timeFrameButton" v-on:click="changeChart('1 Year')">1 Year</button>
+                            <button class="timeFrameButton" v-on:click="changeChart('6 Months')">6 Months</button>
                             <button class="timeFrameButton">3 Months</button>
-                            <button class="timeFrameButton" v-on:click="getTickerData('initial')">1 Week</button>
+                            <button class="timeFrameButton" v-on:click="changeChart('initial')">1 Week</button>
                         </div>
                     </div>
 
@@ -124,6 +127,18 @@
                         <div>52 Week High: </div>
                         <div class="subData" id="fiftyTwoHigh"></div>
                     </div>
+
+                    
+                    <div v-if="hasNews">
+                        <h1>NEWS</h1>
+                        <div id="newsDiv" v-for="story in news">
+                            <div id="storyDiv">
+                                <link v-bind:href="story.image"><h2>{{story.title}}</h2></link>
+                                <img id="storyIMG" v-bind:src="story.image"></img>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
                     
                 </div>
 
@@ -139,14 +154,14 @@
                     </div>
                     
                     <div class="positionsData" v-for="ticker in positions" >
-                        <ul>
+                        <div id="positionsDisplay">
                             <button id="refreshButton" v-on:click="updatePosition(ticker.date)">&#8634;</button>
                             <p id="ps">{{ticker.ticker}} &nbsp;  &nbsp;  &nbsp; &nbsp; &nbsp;</li>    
                             <p id="ps">{{ticker.sharesBought}} &nbsp;  &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;</p>
                             <p id="ps" v-if="ticker.profit >= 0" style="{ color: green}">{{ticker.profit}} &nbsp; &nbsp; &nbsp;</p>
                             <p id="ps" v-if="ticker.profit < 0" style="{ color: red}">{{ticker.profit}} &nbsp; &nbsp; &nbsp;</p>
                             <button id="sellPositionBtn" v-on:click="sellPosition(ticker.date)">Sell Position</button>
-                        </ul>
+                        </div>
                         
                     </div>
                     
