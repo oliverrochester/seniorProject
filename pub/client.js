@@ -176,11 +176,18 @@ let vm = {
             oldDate = oldDate.toLocaleDateString();
 
             oldDate = this.reverseDateRange(oldDate);
+            
             dateNowCorrect = this.reverseDateRange(dateNowCorrect);
-            // console.log(oldDate)
-            // console.log(dateNowCorrect)
+            if(dateNowCorrect[dateNowCorrect.length-2] == "-"){
+                oldDate = oldDate.substring(0, 7) + "-0" + oldDate.substring(8, oldDate.length);
+                dateNowCorrect = dateNowCorrect.substring(0, 7) + "-0" + dateNowCorrect.substring(8, dateNowCorrect.length);
+            }
+
+            console.log(oldDate);
+            console.log(dateNowCorrect);
+            
             let APIString = 'https://api.polygon.io/v2/aggs/' + "ticker/" + ticker + '/range/1/day/' + oldDate + "/" + dateNowCorrect + "?apiKey=Sj2WpljTfw42jRUGXFmOamS0KCAhPC5K";
-            return APIString;
+            return APIString;                                                                                                                                                                                      
         },
 
         reverseDateRange(start){
