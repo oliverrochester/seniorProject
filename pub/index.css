@@ -129,7 +129,14 @@
 .positionsData{
     margin: -20px;
     text-align: left;
+    background-color: rgb(17, 17, 17);
     
+}
+
+#positionsContainer{
+    height: 400px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .mainPageDivs{
@@ -251,11 +258,15 @@
 #performersData{
     text-align: left;
     padding-left: 8px;
+    background-color: rgb(20, 20, 20);
+    border-radius: 5px;
 }
 
 #positionsDisplay{
     margin-bottom: 20px;
     text-align: center;
+    margin-top: 10px;
+    border-radius: 5px;
 }
 
 #storyDiv{
@@ -271,4 +282,29 @@
 #chart{
     background-color: black;
     color: black;
+}
+
+#newsDiv{
+    margin-top: 20px;
+    height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.metaHistory{
+    text-align: left;
+}
+
+#orderHistoryDiv{
+    height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: rgb(20, 20, 20);
+    padding-left: 20px;
+    border-radius: 5px;
+    
+}
+
+.orderHistory{
+    border-bottom: 2px solid black;
 }

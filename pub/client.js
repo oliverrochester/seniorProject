@@ -18,6 +18,7 @@ let vm = {
             hasNews: false,
             greenColor: 'green',
             redColor: 'red',
+            historyList: [],
         }
     }, 
     methods: {
@@ -63,6 +64,7 @@ let vm = {
             this.positions = data.data.tickerList;
             this.userBalance = data.data.balance;
             this.password = data.password;
+            this.historyList = data.data.orderHistory;
             this.scrapeWebForTopPerformers()
             
         },
@@ -148,7 +150,8 @@ let vm = {
             $.post("/updateUserDataAfterBuy", obj, dataFromServer => {
                 //console.log(dataFromServer)
                 this.positions = dataFromServer.data.tickerList;
-                this.userBalance = dataFromServer.data.balance
+                this.userBalance = dataFromServer.data.balance;
+                this.historyList = dataFromServer.data.orderHistory;
             }); 
             
         },
@@ -215,6 +218,13 @@ let vm = {
             else if(timeFrame == "6 Months"){
                 let range = this.chartData.length / 2;
                 range = range.toFixed(0);
+                for(let i = range; i < this.chartData.length; i++){
+                    newdata.push(this.chartData[i]);           
+                }
+            }
+            else if(timeFrame == "3 Months"){
+                let range = this.chartData.length / 4;
+                range = (range * 3).toFixed(0);
                 for(let i = range; i < this.chartData.length; i++){
                     newdata.push(this.chartData[i]);           
                 }

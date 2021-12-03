@@ -88,7 +88,7 @@
                         <div id="timeFrameButtonsDiv">
                             <button class="timeFrameButton" v-on:click="changeChart('1 Year')">1 Year</button>
                             <button class="timeFrameButton" v-on:click="changeChart('6 Months')">6 Months</button>
-                            <button class="timeFrameButton">3 Months</button>
+                            <button class="timeFrameButton" v-on:click="changeChart('3 Months')">3 Months</button>
                             <button class="timeFrameButton" v-on:click="changeChart('initial')">1 Week</button>
                         </div>
                     </div>
@@ -144,8 +144,8 @@
 
                 <div id="positionsDiv" class="mainPageDivs">
                     
-                    <div><h2>Total Profits:</h2> <h1>{{"$: " + totalProfits}}</h1></div>
-                    <h3>Positions:</h3>
+                    
+                    <h2>Positions:</h2>
                     
                     <div>
                         <p id="ps">Symbol&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p>
@@ -153,18 +153,31 @@
                         <p id="ps">Gains/Losses</p>
                     </div>
                     
-                    <div class="positionsData" v-for="ticker in positions" >
-                        <div id="positionsDisplay">
-                            <button id="refreshButton" v-on:click="updatePosition(ticker.date)">&#8634;</button>
-                            <p id="ps">{{ticker.ticker}} &nbsp;  &nbsp;  &nbsp; &nbsp; &nbsp;</li>    
-                            <p id="ps">{{ticker.sharesBought}} &nbsp;  &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;</p>
-                            <p id="ps" v-if="ticker.profit >= 0" v-bind:style="{color: greenColor}">{{"+" + ticker.profit}} &nbsp; &nbsp; &nbsp;</p>
-                            <p id="ps" v-if="ticker.profit < 0" v-bind:style="{color: redColor}">{{ticker.profit}} &nbsp; &nbsp; &nbsp;</p>
-                            <button id="sellPositionBtn" v-on:click="sellPosition(ticker.date)">Sell Position</button>
+                    <div id="positionsContainer">
+                        <div class="positionsData" v-for="ticker in positions" >
+                            <div id="positionsDisplay">
+                                <button id="refreshButton" v-on:click="updatePosition(ticker.date)">&#8634;</button>
+                                <p id="ps">{{ticker.ticker}} &nbsp;  &nbsp;  &nbsp; &nbsp; &nbsp;</li>    
+                                <p id="ps">{{ticker.sharesBought}} &nbsp;  &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;</p>
+                                <p id="ps" v-if="ticker.profit >= 0" v-bind:style="{color: greenColor}">{{"+" + ticker.profit}} &nbsp; &nbsp; &nbsp;</p>
+                                <p id="ps" v-if="ticker.profit < 0" v-bind:style="{color: redColor}">{{ticker.profit}} &nbsp; &nbsp; &nbsp;</p>
+                                <button id="sellPositionBtn" v-on:click="sellPosition(ticker.date)">Sell Position</button>
+                            </div>   
                         </div>
-                        
                     </div>
-                    
+
+                    <h3>Order History</h3>
+                    <div id="orderHistoryDiv">
+                        <div class="orderHistory" v-for="order in historyList" >
+                            <div>
+                                <p class='metaHistory'><h3>{{order.tickerSymbol}}</h3></p>
+                                <p class='metaHistory'>{{"Date: " + order.date}}</p>
+                                <p class='metaHistory'>{{"Order Type: " + order.orderType}}</p>
+                                <p class='metaHistory'>{{"Shares: " + order.shareAmt}}</p>
+                                <p class='metaHistory'>{{"Cost: " + order.costOfPurchase}}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>

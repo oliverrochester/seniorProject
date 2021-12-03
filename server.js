@@ -8,7 +8,7 @@ const spawn = require('child_process').spawn;
 
 const userDatabase = new Datastore('userDatabase.db');
 userDatabase.loadDatabase();
-userDatabase.insert({username: "orochest", password: "Skipper99?", tickerList: [], balance: 100000.00})
+//userDatabase.insert({username: "orochest", password: "Skipper99?", tickerList: [], balance: 100000.00})
 
 //tickerList in database has array form of [stockTicker, how many shares bought, price of stock when bought, total cost of purchase]
 
@@ -44,6 +44,7 @@ app.post("/getStockPrice", function(req, res) {
 app.post("/updateUserDataAfterBuy", function(req, res) {
     let username = req.body.username;
     let newTickerList = [];
+    let newHistoryList = [];
     let newBuyObj = {
          ticker: req.body.ticker,
          balance: req.body.balance,
@@ -54,11 +55,21 @@ app.post("/updateUserDataAfterBuy", function(req, res) {
          profit: "0",
          
     }
+
+    let historyObj = {
+        tickerSymbol: req.body.ticker,
+        orderType: "BUY",
+        date: new Date().toLocaleDateString(),
+        shareAmt: req.body.shareAmt,
+        costOfPurchase: req.body.cost
+    }
     
     userDatabase.findOne({username: username}, (err, user) =>{
         newTickerList = user.tickerList;
-        newTickerList.push(newBuyObj)
-        userDatabase.update({username: username},{$set: {tickerList: newTickerList, balance: newBuyObj.balance}})
+        newHistoryList = user.orderHistory;
+        newTickerList.push(newBuyObj);
+        newHistoryList.push(historyObj);
+        userDatabase.update({username: username},{$set: {tickerList: newTickerList, balance: newBuyObj.balance, orderHistory: newHistoryList}})
         userDatabase.findOne({username: username}, (err, user) =>{
             res.setHeader("Content-Type", "application/json");
             res.write(JSON.stringify({data: user}));
@@ -174,7 +185,7 @@ app.post("/restartFresh", function(req, res) {
     let username = req.body.username;
     let newTickerList = [];
     userDatabase.findOne({username: username}, (err, user) =>{
-        userDatabase.update({username: username},{$set: {tickerList: newTickerList, balance: 100000.00}})
+        userDatabase.update({username: username},{$set: {tickerList: newTickerList, balance: 100000.00, orderHistory: []}})
         userDatabase.findOne({username: username}, (err, user) =>{
             res.setHeader("Content-Type", "application/json");
             res.write(JSON.stringify({data: user}));
@@ -239,7 +250,7 @@ app.post("/createAccount", function(req, res) {
             res.end();
         }
         else{
-            userDatabase.insert({username: username, password: password, tickerList: [], balance: 100000.00});
+            userDatabase.insert({username: username, password: password, tickerList: [], balance: 100000.00, orderHistory: []});
             console.log("Account created successfully")
             res.setHeader("Content-Type", "application/json");
             res.write(JSON.stringify({createAccountSuccess: true}));
