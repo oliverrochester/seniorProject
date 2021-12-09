@@ -60,10 +60,10 @@
                         <input id="tickerToPurchase" class="inputs"></input>
                         <h4>How many shares?</h4>
                         <input id="shareAmt" class="inputs"></input>
-                        <button class="buySellButtons" v-on:click="buyStock()">Buy Now</button>
+                        <button class="buySellButtons" id="buyBtn" v-on:click="buyStock()">Buy Now</button>
                         <hr>
                     </div>
-                    <div id="newsDiv">
+                    <div id="performerDiv">
                         <h2>Top 25 Performers</h2>
                         <div id="performersData" v-for="performer in performers" >
                             <p>{{"- " + performer}}</p>
@@ -94,48 +94,50 @@
                     </div>
 
 
-
+                    
                     <div class="dataPoints">
-                        <div>Current Stock Price:</div>
+                        <h4 id="h4s">Current Stock Price:&nbsp; &nbsp;</h4>
                         <div class="subData" id="currentPriceDiv"></div>
                     </div>
                     <div class="dataPoints">
-                        <div>Todays Open: </div>
+                        <h4 id="h4s">Todays Open:&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</h4>
                         <div class="subData" id="todayOpenPriceDiv"></div>
                     </div>
                     <div class="dataPoints">
-                        <div>Yesterday's Close: </div>
+                        <h4 id="h4s">Yesterday's Close:&nbsp; &nbsp; &nbsp;</h4>
                         <div class="subData" id="yesterdayClosePriceDiv"></div>
                     </div>
                     <div class="dataPoints">
-                        <div>50 Day Moving Avg: </div>
+                        <h4 id="h4s">50 Day Move Avg.: &nbsp; &nbsp; &nbsp;</h4>
                         <div class="subData" id="fiftyDayAvgDiv"></div>
                     </div>
                     <div class="dataPoints">
-                        <div>Day High: </div>
+                        <h4 id="h4s">Day High: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</h4>
                         <div class="subData" id="dayHigh"></div>
                     </div>
                     <div class="dataPoints">
-                        <div>Day Low: </div>
+                        <h4 id="h4s">Day Low: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</h4>
                         <div class="subData" id="dayLow"></div>
                     </div>
                     <div class="dataPoints">
-                        <div>52 Week Low: </div>
+                        <h4 id="h4s">52 Week Low: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</h4>
                         <div class="subData" id="fiftyTwoLow"></div>
                     </div>
                     <div class="dataPoints">
-                        <div>52 Week High: </div>
+                        <h4 id="h4s">52 Week High: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</h4>
                         <div class="subData" id="fiftyTwoHigh"></div>
                     </div>
-
-                    
+                    <br>
+                    <br>
+                    <hr>
+                    <br>
+                    <br>
                     <div v-if="hasNews">
                         <h1>NEWS</h1>
                         <div id="newsDiv" v-for="story in news">
                             <div id="storyDiv">
-                                <link v-bind:href="story.image"><h2>{{story.title}}</h2></link>
+                                <h2><a v-bind:href="story.url">{{story.title}}</a></h2>
                                 <img id="storyIMG" v-bind:src="story.image"></img>
-                                <hr>
                             </div>
                         </div>
                     </div>

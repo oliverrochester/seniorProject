@@ -19,6 +19,7 @@ let vm = {
             greenColor: 'green',
             redColor: 'red',
             historyList: [],
+            
         }
     }, 
     methods: {
@@ -64,7 +65,7 @@ let vm = {
             this.positions = data.data.tickerList;
             this.userBalance = data.data.balance;
             this.password = data.password;
-            this.historyList = data.data.orderHistory;
+            this.historyList = data.data.orderHistory.reverse();
             this.scrapeWebForTopPerformers()
             
         },
@@ -151,7 +152,7 @@ let vm = {
                 //console.log(dataFromServer)
                 this.positions = dataFromServer.data.tickerList;
                 this.userBalance = dataFromServer.data.balance;
-                this.historyList = dataFromServer.data.orderHistory;
+                this.historyList = dataFromServer.data.orderHistory.reverse();
             }); 
             
         },
@@ -292,6 +293,7 @@ let vm = {
                     let obj = {};
                     obj.title = newsStory.title;
                     obj.image = newsStory.image_url;
+                    obj.url = newsStory.url;
                     newsArr.push(obj);
                 })
                 this.news = newsArr;
@@ -416,21 +418,23 @@ let vm = {
                 dataArrNew.push(tempStr)
             })
 
-            var newtext = document.createTextNode(dataArrNew[0])
+            
+
+            var newtext = document.createTextNode(parseFloat(dataArrNew[0]).toFixed(2))
             currentPrice.appendChild(newtext);
-            var newtext1 = document.createTextNode(dataArrNew[1])
+            var newtext1 = document.createTextNode(parseFloat(dataArrNew[1]).toFixed(2))
             todayOpenPrice.appendChild(newtext1);
-            var newtext2 = document.createTextNode(dataArrNew[2])
+            var newtext2 = document.createTextNode(parseFloat(dataArrNew[2]).toFixed(2))
             yesterdayClosePrice.appendChild(newtext2);
-            var newtext3 = document.createTextNode(dataArrNew[3])
+            var newtext3 = document.createTextNode(parseFloat(dataArrNew[3]).toFixed(2))
             fiftyDayAvg.appendChild(newtext3);
-            var newtext4 = document.createTextNode(dataArrNew[4])
+            var newtext4 = document.createTextNode(parseFloat(dataArrNew[4]).toFixed(2))
             dayHigh.appendChild(newtext4);
-            var newtext5 = document.createTextNode(dataArrNew[5])
+            var newtext5 = document.createTextNode(parseFloat(dataArrNew[5]).toFixed(2))
             dayLow.appendChild(newtext5);
-            var newtext6 = document.createTextNode(dataArrNew[6])
+            var newtext6 = document.createTextNode(parseFloat(dataArrNew[6]).toFixed(2))
             fifty2Low.appendChild(newtext6);
-            var newtext7 = document.createTextNode(dataArrNew[7])
+            var newtext7 = document.createTextNode(parseFloat(dataArrNew[7]).toFixed(2))
             fifty2High.appendChild(newtext7);
             searchStatus.innerHTML = "";
             searchBtn.disabled = false;
@@ -449,7 +453,7 @@ let vm = {
             $.post("/sellPosition", {username: this.username, date: date}, dataFromServer => {
                 //console.log(dataFromServer)
                 this.positions = dataFromServer.data.tickerList;
-                this.userBalance = dataFromServer.data.balance;
+                this.userBalance = dataFromServer.data.balance.toFixed(2);
                 let newProfit = 0.0;
                 this.positions.forEach((pos)=>{
                     newProfit += parseFloat(pos.profit);
