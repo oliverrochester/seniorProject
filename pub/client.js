@@ -49,13 +49,17 @@ let vm = {
         },
 
         login(){
-        let username = String(document.getElementById("userLogin").value);
-        let password = String(document.getElementById("passwordLogin").value);
-        $.post("/login", {username: username, password: password}, dataFromServer => {
-            if(dataFromServer.loginSuccess){
-                this.goToMainPage(dataFromServer);
-            }
-        });
+            let status = document.getElementById("createAccountorLoginStatus");
+            let username = String(document.getElementById("userLogin").value);
+            let password = String(document.getElementById("passwordLogin").value);
+            $.post("/login", {username: username, password: password}, dataFromServer => {
+                if(dataFromServer.loginSuccess){
+                    this.goToMainPage(dataFromServer);
+                }
+                else{
+                    status.innerHTML = "Incorrect username or password";
+                }
+            });
         },
 
         goToMainPage(data){
