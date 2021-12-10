@@ -206,7 +206,6 @@ app.post("/getTopPerformers", function(req, res) {
 });
 
 
-
 //Server login function, gathers username and password from req object
 //Searches database to see if that username with the given password exists
 //If true, it returns true and the entire user object back to the client
@@ -258,7 +257,6 @@ app.post("/createAccount", function(req, res) {
         }
     });
 });
-
 
 
 app.listen(80, function() {

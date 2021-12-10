@@ -450,16 +450,25 @@ let vm = {
         },
 
         sellPosition(date){
-            $.post("/sellPosition", {username: this.username, date: date}, dataFromServer => {
-                //console.log(dataFromServer)
-                this.positions = dataFromServer.data.tickerList;
-                this.userBalance = dataFromServer.data.balance.toFixed(2);
-                let newProfit = 0.0;
-                this.positions.forEach((pos)=>{
-                    newProfit += parseFloat(pos.profit);
-                })
-                this.totalProfits = newProfit;
-            }); 
+            fetch('https://api.polygon.io/v1/marketstatus/now?apiKey=Sj2WpljTfw42jRUGXFmOamS0KCAhPC5K')
+            .then(response => response.json())
+            .then(data => {
+                if(data.market == "extended-hours" || data.market == "closed"){
+                    alert("stock market closed");
+                }
+                else{
+                    $.post("/sellPosition", {username: this.username, date: date}, dataFromServer => {
+                        //console.log(dataFromServer)
+                        this.positions = dataFromServer.data.tickerList;
+                        this.userBalance = dataFromServer.data.balance.toFixed(2);
+                        let newProfit = 0.0;
+                        this.positions.forEach((pos)=>{
+                            newProfit += parseFloat(pos.profit);
+                        })
+                        this.totalProfits = newProfit;
+                    }); 
+                }
+            })   
         },
 
         restartFresh(){

@@ -61,7 +61,11 @@
                         <h4>How many shares?</h4>
                         <input id="shareAmt" class="inputs"></input>
                         <button class="buySellButtons" id="buyBtn" v-on:click="buyStock()">Buy Now</button>
+                        <br>
+                        <br>
                         <hr>
+                        <br>
+                        <br>
                     </div>
                     <div id="performerDiv">
                         <h2>Top 25 Performers</h2>
@@ -169,7 +173,8 @@
                     </div>
 
                     <h3>Order History</h3>
-                    <div id="orderHistoryDiv">
+                    <div id="orderHistoryDiv" v-if="historyList.length >= 1">
+                    
                         <div class="orderHistory" v-for="order in historyList" >
                             <div>
                                 <p class='metaHistory'><h3>{{order.tickerSymbol}}</h3></p>
